@@ -1,129 +1,81 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# Created by https://www.gitignore.io/api/matlab,windows,microsoftoffice
+# Edit at https://www.gitignore.io/?templates=matlab,windows,microsoftoffice
 
-# C extensions
-*.so
+### MATLAB ###
+# Windows default autosave extension
+*.asv
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+# OSX / *nix default autosave extension
+*.m~
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Compiled MEX binaries (all platforms)
+*.mex*
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Packaged app and toolbox files
+*.mlappinstall
+*.mltbx
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# Generated helpsearch folders
+helpsearch*/
 
-# Translations
-*.mo
-*.pot
+# Simulink code generation folders
+slprj/
+sccprj/
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# Matlab code generation folders
+codegen/
 
-# Flask stuff:
-instance/
-.webassets-cache
+# Simulink autosave extension
+*.autosave
 
-# Scrapy stuff:
-.scrapy
+# Octave session info
+octave-workspace
 
-# Sphinx documentation
-docs/_build/
+### MicrosoftOffice ###
+*.tmp
 
-# PyBuilder
-target/
+# Word temporary
+~$*.doc*
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Word Auto Backup File
+Backup of *.doc*
 
-# IPython
-profile_default/
-ipython_config.py
+# Excel temporary
+~$*.xls*
 
-# pyenv
-.python-version
+# Excel Backup File
+*.xlk
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+# PowerPoint temporary
+~$*.ppt*
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
+# Visio autosave temporary files
+*.~vsd*
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-# SageMath parsed files
-*.sage.py
+# Dump file
+*.stackdump
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Folder config file
+[Dd]esktop.ini
 
-# Spyder project settings
-.spyderproject
-.spyproject
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
 
-# Rope project settings
-.ropeproject
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
 
-# mkdocs documentation
-/site
+# Windows shortcuts
+*.lnk
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+# End of https://www.gitignore.io/api/matlab,windows,microsoftoffice
