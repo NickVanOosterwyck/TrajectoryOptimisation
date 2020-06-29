@@ -13,10 +13,6 @@ classdef TrajOpt < handle
             obj.input = obj.parseInput(input);
         end
         
-        function [] = defineProperties(obj)
-            obj.prop = defineProp(obj.input);
-        end
-        
         function [] = defineFitnessFunc(obj)
             if isempty(obj.traj)
                 obj.defineTrajectory();

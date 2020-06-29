@@ -17,3 +17,4 @@ input.sSolver = 'quasi-newton';
 Ned = TrajOpt(input);
 
 traj = Ned.defineTrajectory();
+prop = Ned.defineProperties();

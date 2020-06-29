@@ -1,33 +1,30 @@
-function [prop] = defineProp(problem)
+function [prop] = defineProperties(obj)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % Read settings
-sMechanism = problem.gen.sMechanism;
-
-posA = problem.traj.posA;
-posB = problem.traj.posB;
-isPosResc = problem.traj.isPosResc;
-
-d_J = problem.prop.d_J;
-d_Tl = problem.prop.d_Tl;
-
-dataJ = problem.prop.dataJ;
-dataTl = problem.prop.dataTl;
+sMechanism = obj.input.sMechanism;
+posA = obj.input.posA;
+posB = obj.input.posB;
+isPosResc = obj.input.isPosResc;
+d_J = obj.input.d_J;
+d_Tl = obj.input.d_Tl;
+dataJ = obj.input.dataJ;
+dataTl = obj.input.dataTl;
 
 % Determine properties
 syms ph
 
 % Define properties
 % load data
-%fprintf('Reading of property data started. \n');
-if ~isempty(dataTl)
+fprintf('Reading of property data started. \n');
+if isempty(dataTl)
     dataTl=xlsread(strcat(sMechanism,'.xlsx'),2);
 end
-if ~isempty(dataJ)
+if isempty(dataJ)
     dataJ=xlsread(strcat(sMechanism,'.xlsx'),4);
 end
-%fprintf('Property data is imported. \n\n');
+fprintf('Property data is imported. \n\n');
 
 % select 'useful' part of property data
 [~,iTl_1] = min(abs(dataTl(:,1)-posA)); % get closest value
@@ -48,7 +45,7 @@ end
 if isempty(d_Tl)
     d_Tl=0;
     while 1
-        [p_Tl,S]=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
+        [a_Tl,S]=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
         %R2_Tl=1 - (S.normr/norm(dataTl(:,2) - mean(dataTl(:,2))))^2;
         L2_Tl=S.normr;
         if L2_Tl < 0.01
@@ -57,13 +54,13 @@ if isempty(d_Tl)
         d_Tl=d_Tl+1;
     end
 else
-    p_Tl=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
+    a_Tl=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
 end
 
 if isempty(d_J)
     d_J=0;
     while 1
-        [p_J,S]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
+        [a_J,S]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
         %R2_J=1 - (S.normr/norm(dataJ(:,2) - mean(dataJ(:,2))))^2;
         L2_J=S.normr;
         if L2_J < 0.001
@@ -73,19 +70,16 @@ if isempty(d_J)
     end
     
 else
-    p_J=polyfit(dataJ(:,1),dataJ(:,2),d_J);
+    a_J=polyfit(dataJ(:,1),dataJ(:,2),d_J);
 end
 
-Tl=poly2sym(p_Tl,ph);
-Tl=horner(Tl);
-J=poly2sym(p_J,ph);
-J=horner(J);
-
-% vpa(p_J)?
+Tl=poly2sym(a_Tl,ph);
+%Tl=horner(Tl);
+J=poly2sym(a_J,ph);
+%J=horner(J);
 
 Tl_dis=dataTl(:,1:2);
 J_dis=dataJ(:,1:2);
-
 
 Jd1=diff(J,ph); % inertia variation
 
@@ -95,8 +89,8 @@ prop.J=J;
 prop.Jd1=Jd1;
 prop.d_Tl=d_Tl;
 prop.d_J=d_J;
-prop.p_Tl=p_Tl;
-prop.p_J=p_J;
+prop.a_Tl=a_Tl;
+prop.a_J=a_J;
 prop.Tl_dis=Tl_dis;
 prop.J_dis=J_dis;
 
