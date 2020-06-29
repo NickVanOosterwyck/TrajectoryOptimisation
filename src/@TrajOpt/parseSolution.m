@@ -11,11 +11,12 @@ sTrajType = obj.input.sTrajType; % trajectory type
 nPieces = obj.input.nPieces; % #intervals
 isTimeResc = obj.input.isTimeResc;
 isPosResc = obj.input.isPosResc;
+DOF = obj.input.DOF;
 
 q = obj.traj.q;
 breaks = obj.traj.breaks;
 designVar = obj.traj.var.designVar;
-constrEq = obj.traj.var.constrEq;
+constrVar_sol = obj.traj.var.constrVar_sol;
 
 Tl = obj.prop.Tl;
 J = obj.prop.J;
@@ -25,7 +26,7 @@ fitFun = obj.fit.fitFun;
 designVar_sol = obj.sol.designVar_sol;
 
 % determine coefficients
-p_sol = subs(constrEq,designVar.',designVar_sol).';
+p_sol = subs(constrVar_sol,designVar.',designVar_sol).';
 p_sol = [p_sol designVar_sol];
 p_sol= double(p_sol);
 
@@ -96,9 +97,9 @@ end
 % coefficients of standard polynomial
 switch sTrajType
     case {'poly5','poly','cheb','cheb2'}
-        %p_pol=zeros(nInt,n_tr+1);
+        p_pol=zeros(nPieces,DOF+6);
         for i=1:nPieces
-            p_pol(i,:)=double(coeffs(q_C(i),'All'));
+            p_pol(i,:)=fliplr(double(coeffs(q_C(i),'All')));
         end
     otherwise
         p_pol=[];
