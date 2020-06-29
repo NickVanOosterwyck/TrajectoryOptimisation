@@ -12,32 +12,10 @@ classdef TrajOpt < handle
         function obj = TrajOpt(input)
             obj.input = obj.parseInput(input);
         end
-        
-        function [] = defineFitnessFunc(obj)
-            if isempty(obj.traj)
-                obj.defineTrajectory();
-            end
-            if isempty(obj.prop)
-                obj.defineProperties();
-            end
-            obj.fit = createFit(obj.input,obj.traj,obj.prop);
+        function optimizeTrajectory(obj)
+            obj.optimizeFitness();
+            obj.parseSolution();
         end
-        
-        function [] = optimiseFitnessFunc(obj)
-            if isempty(obj.fit)
-                obj.defineFitnessFunc();
-            end
-            obj.sol = optimizeTrajectory(obj.input,obj.traj,obj.fit);
-        end
-        
-        function [] = optimiseTrajectory(obj)
-            if isempty(obj.fit)
-                obj.defineFitnessFunc();
-            end
-            obj.sol = optimizeTrajectory(obj.input,obj.traj,obj.fit);
-            obj.res = evalSol(obj.input,obj.traj,obj.prop,obj.fit,obj.sol);
-        end
-        
     end
 end
 

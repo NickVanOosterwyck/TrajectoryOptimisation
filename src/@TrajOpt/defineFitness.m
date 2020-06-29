@@ -1,32 +1,37 @@
-function [obj] = createFitness(obj)
+function [fit] = defineFitness(obj)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-%%
+%
+if isempty(obj.traj)
+    obj.defineTrajectory();
+end
+if isempty(obj.prop)
+    obj.defineProperties();
+end
+
 % Read problem
-timeA = obj.traj.timeA; % start time
-timeB = obj.traj.timeB; % end time
-posA = obj.traj.posA; % start position
-posB = obj.traj.posB; % end position
-DOF = obj.traj.DOF; % degrees of freedom
-nInt = obj.traj.nInt;
-
-isTimeResc = obj.traj.isTimeResc;
-isPosResc = obj.traj.isPosResc;
-
-sFitNot = obj.not.sFitNot;
-isHorner = obj.not.isHorner;
+timeA = obj.input.timeA; % start time
+timeB = obj.input.timeB; % end time
+posA = obj.input.posA; % start position
+posB = obj.input.posB; % end position
+DOF = obj.input.DOF; % degrees of freedom
+nPieces = obj.input.nPieces;
+isTimeResc = obj.input.isTimeResc;
+isPosResc = obj.input.isPosResc;
+sFitNot = obj.input.sFitNot;
+isHornerNot = obj.input.isHornerNot;
 
 % Read properties
-Tl = prop.Tl;
-J = prop.J;
-Jd1 = prop.Jd1;
+Tl = obj.prop.Tl;
+J = obj.prop.J;
+Jd1 = obj.prop.Jd1;
 
 % Read trajectory
-q = traj.q;
-qd1 = traj.qd1;
-qd2 = traj.qd2;
-breaks = traj.breaks;
-designVar = traj.var.designVar;
+q = obj.traj.q;
+qd1 = obj.traj.qd1;
+qd2 = obj.traj.qd2;
+breaks = obj.traj.breaks;
+designVar = obj.traj.var.designVar;
 
 % check for resaling
 if isTimeResc
@@ -65,16 +70,16 @@ Tm=expand(Tm); % expand and simplify function for easier integration
 syms x
 tic
 fprintf('Integration of objective function started. \n');
-if nInt==1
+if nPieces==1
     fitFun=int(Tm^2,x,lb_time,ub_time);
 else
-    fitFun=sym(zeros(nInt,1));
-    for i=1:nInt
+    fitFun=sym(zeros(nPieces,1));
+    for i=1:nPieces
         fitFun(i,1)=int(Tm(i).^2,x,breaks(i),breaks(i+1));
     end
 end
 %objFun = sqrt(1/(ub_time-lb_time)*ones(1,k)*objFun); % to prevent NaN
-fitFun = 1/(ub_time-lb_time)*ones(1,nInt)*fitFun; % to prevent NaN
+fitFun = 1/(ub_time-lb_time)*ones(1,nPieces)*fitFun; % to prevent NaN
 t_int=toc;
 fprintf('Objective function integrated in %f s. \r\n',t_int);
 
@@ -84,7 +89,7 @@ fitFun=expand(fitFun); % simplification of objective function
 t_sim=toc;
 fprintf('Objective function simplified in %f s. \r\n',t_sim);
 
-if isHorner
+if isHornerNot
     fitFun=horner(fitFun);
 end
 
@@ -100,6 +105,10 @@ if DOF>0
     end
     
     switch sFitNot
+        case 'frac'
+            fitFun_vec = char(fitFun);
+        case 'vpa'
+            fitFun_vec = char(vpa(fitFun));
         case 'intval'
             [C,T] = coeffs(fitFun);
             [N,D] = numden(C);
@@ -110,10 +119,6 @@ if DOF>0
                     '))/intval(num2str(' char(D(i)) '))*' char(T(i)) ')'];
             end
             fitFun_vec(1)=[]; % remove first '+' sign
-        case 'frac'
-            fitFun_vec = char(fitFun);
-        case 'vpa'
-            fitFun_vec = char(vpa(fitFun));
     end
     fitFun_vec = replace(fitFun_vec,old,new);
     fitFun_vec = vectorize(fitFun_vec);
@@ -126,15 +131,15 @@ end
 fprintf('Objective function vectorized in %f s. \n\n',t_vec);
 
 % output data
-obj.fitFun=fitFun;
-obj.fitFun_vec=fitFun_vec;
-obj.Tm=Tm;
-obj.a=a;
-obj.b=b;
-obj.c=c;
-obj.times=[t_int,t_sim,t_vec];
+fit.fitFun=fitFun;
+fit.fitFun_vec=fitFun_vec;
+fit.Tm=Tm;
+fit.a=a;
+fit.b=b;
+fit.c=c;
+fit.times=[t_int,t_sim,t_vec];
 
-fprintf('%s\r\n','----------------------------------------------');
+obj.fit = fit;
 
 end
 

@@ -16,5 +16,8 @@ input.sSolver = 'quasi-newton';
 
 Ned = TrajOpt(input);
 
-traj = Ned.defineTrajectory();
-prop = Ned.defineProperties();
+% traj = Ned.defineTrajectory();
+% prop = Ned.defineProperties();
+% fit = Ned.defineFitness();
+
+Ned.optimizeTrajectory();

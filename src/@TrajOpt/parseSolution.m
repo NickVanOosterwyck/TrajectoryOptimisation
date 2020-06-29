@@ -1,28 +1,28 @@
-function [res] = evalSol(problem,traj,prop,fit,sol)
+function [res] = parseSolution(obj)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
 % read input
-timeA = problem.traj.timeA; % start time
-timeB = problem.traj.timeB; % end time
-posA = problem.traj.posA; % start position
-posB = problem.traj.posB; % end position
-sTrajType = problem.traj.sTrajType; % trajectory type
-nInt = problem.traj.nInt; % #intervals
-isTimeResc = problem.traj.isTimeResc;
-isPosResc = problem.traj.isPosResc;
+timeA = obj.input.timeA; % start time
+timeB = obj.input.timeB; % end time
+posA = obj.input.posA; % start position
+posB = obj.input.posB; % end position
+sTrajType = obj.input.sTrajType; % trajectory type
+nPieces = obj.input.nPieces; % #intervals
+isTimeResc = obj.input.isTimeResc;
+isPosResc = obj.input.isPosResc;
 
-q=traj.q;
-br = traj.breaks;
-designVar=traj.var.designVar;
-constrEq=traj.var.constrEq;
+q = obj.traj.q;
+breaks = obj.traj.breaks;
+designVar = obj.traj.var.designVar;
+constrEq = obj.traj.var.constrEq;
 
-Tl=prop.Tl;
-J=prop.J;
+Tl = obj.prop.Tl;
+J = obj.prop.J;
 
-fitFun=fit.fitFun;
+fitFun = obj.fit.fitFun;
 
-designVar_sol=sol.designVar_sol;
+designVar_sol = obj.sol.designVar_sol;
 
 % determine coefficients
 p_sol = subs(constrEq,designVar.',designVar_sol).';
@@ -86,8 +86,8 @@ Trms_C=double(sqrt(subs(fitFun,designVar.',designVar_sol)));
 
 % calculate Trms discrete
 Tmax=0;
-for i=nInt
-    ts = linspace(br(i),br(i+1),100);
+for i=nPieces
+    ts = linspace(breaks(i),breaks(i+1),100);
     y = double(subs(Tm_C(i),t,ts));
     Tmax = max(max(abs(y)),Tmax);
 end
@@ -97,7 +97,7 @@ end
 switch sTrajType
     case {'poly5','poly','cheb','cheb2'}
         %p_pol=zeros(nInt,n_tr+1);
-        for i=1:nInt
+        for i=1:nPieces
             p_pol(i,:)=double(coeffs(q_C(i),'All'));
         end
     otherwise
@@ -122,6 +122,8 @@ res.Trms = Trms_C;
 res.Trms_dis = Trms_dis;
 res.p_sol=p_sol;
 res.p_pol=p_pol;
+
+obj.res = res;
 
 end
 

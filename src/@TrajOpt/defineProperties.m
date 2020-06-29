@@ -94,5 +94,7 @@ prop.a_J=a_J;
 prop.Tl_dis=Tl_dis;
 prop.J_dis=J_dis;
 
+obj.prop = prop;
+
 end
 

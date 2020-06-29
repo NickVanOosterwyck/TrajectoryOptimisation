@@ -259,6 +259,26 @@ else
 end
 inputC.sFit = input.sFit;
 
+%%% sFitNot
+% validate field
+if ~isfield(input, 'sFitNot')
+    input.sFitNot = 'frac';
+else
+    validstrings = {'frac','vpa','intval'};
+    validatestring(input.sFitNot,validstrings);
+end
+inputC.sFitNot = input.sFitNot;
+
+%%% isHornerNot
+if ~isfield(input, 'isHornerNot')
+    input.isHornerNot = false;
+else
+    if ~islogical(input.isHornerNot)
+        error('Field ''isHornerNot'' must be logical.')
+    end
+end
+inputC.isHornerNot = input.isHornerNot;
+
 %%% lb
 % validate field and assign default value if empty
 if ~isfield(input,'lb')
@@ -291,15 +311,6 @@ else
     validatestring(input.sSolver,validstrings);
 end
 inputC.sSolver = input.sSolver;
-
-%%% isHorner
-if ~isfield(input, 'isHorner')
-    input.isHorner = false;
-else
-    if ~islogical(input.isHorner)
-        error('Field ''isHorner'' must be logical.')
-    end
-end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % assign dependent properties

@@ -1,27 +1,30 @@
-function [sol, varargout] = optimizeTrajectory(problem,traj,fit)
+function [sol] = optimizeFitness(obj)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
+
+if isempty(obj.fit)
+    obj.defineFitness();
+end
 
 % create peristent variable for INTLAB initialization
 persistent isIntlabInit
 
 % read input
-DOF = problem.traj.DOF;
+DOF = obj.input.DOF;
+sSolver = obj.input.sSolver;
+lb = obj.input.lb;
+ub = obj.input.ub;
 
-sAlgorithm = problem.solv.sAlgorithm;
-lb = problem.solv.lb;
-ub = problem.solv.ub;
+designVar = obj.traj.var.designVar;
 
-designVar = traj.var.designVar;
-
-fitFun = fit.fitFun;
-fitFun_vec = fit.fitFun_vec;
+fitFun = obj.fit.fitFun;
+fitFun_vec = obj.fit.fitFun_vec;
 
 % set search box
 lb(1:DOF,1) = -1;
 ub(1:DOF,1) = 1;
 
-% bron?
+% source?
 % r = 1:DOF;
 % r = 5+r;
 % ub = 1./(posB.^r);
@@ -37,8 +40,8 @@ if DOF == 0
 
 else
         fprintf(['Optimization of objective function with %d DOF ' ...
-            'started with %s...\n'],DOF,sAlgorithm);
-        switch sAlgorithm
+            'started with %s...\n'],DOF,sSolver);
+        switch sSolver
             case 'directCal'
                 % set equations
                 eq=derivatives(fitFun,designVar);
@@ -201,6 +204,8 @@ sol.designVar_sol=designVar_sol;
 sol.fit_val=fit_min;
 sol.t_sol=t_sol;
 sol.Data=data;
+
+obj.sol = sol;
 
 end
 
