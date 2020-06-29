@@ -39,8 +39,10 @@ q=subs(q,designVar.',designVar_sol);
 syms x t ph th
 if isTimeResc
     q_C=subs(q,x,((2*t)-(timeB+timeA))/(timeB-timeA));
+    breaks_C = rescale(breaks,timeA,timeB);
 elseif ~isTimeResc
     q_C=subs(q,x,t);
+    breaks_C = breaks;
 % elseif isTrajResc && x_A ~=-1 && x_B ~=1
 %     q_C=subs(q,x,((t_B-t_A)/(x_B-x_A)*(x-x_A))+t_A);
 end
@@ -85,14 +87,16 @@ syms t
 Trms_C=double(sqrt(subs(fitFun,designVar.',designVar_sol)));
 %Trms_C=double(sqrt(1/2*int(Tm_C^2,t,t_A,t_B))); % alternative
 
-% calculate Trms discrete
-Tmax=0;
+% calculate Tmax & Trms discrete
+y=zeros(nPieces,100);
 for i=nPieces
-    ts = linspace(breaks(i),breaks(i+1),100);
-    y = double(subs(Tm_C(i),t,ts));
-    Tmax = max(max(abs(y)),Tmax);
+    ts = linspace(breaks_C(i),breaks_C(i+1),100);
+    y(i,:) = double(subs(Tm_C(i),t,ts));
 end
-    Trms_dis = rms(y);
+
+y = reshape(y,1,[]);
+Tmax_dis = max(abs(y));
+Trms_dis = rms(y);
 
 % coefficients of standard polynomial
 switch sTrajType
@@ -106,21 +110,21 @@ switch sTrajType
 end
 
 % set ouput
-res.q=q_C;
-res.qd1=qd1_C;
-res.qd2=qd2_C;
+res.q = q_C;
+res.qd1 = qd1_C;
+res.qd2 = qd2_C;
 res.Tm = Tm_C;
-res.J = J_C;
-res.Jd1 = J_d1_C;
-res.Tl = Tl_C;
-res.Tload = Tload_C;
-res.Inertia = Inertia_C;
-res.Inertia_d1 = Inertia_d1_C;
-res.Tacc = Tacc_C;
-res.Tvar = Tvar_C;
-res.Tmax=Tmax;
+%res.J = J_C;
+%res.Jd1 = J_d1_C;
+%res.Tl = Tl_C;
 res.Trms = Trms_C;
 res.Trms_dis = Trms_dis;
+res.Tmax = Tmax_dis;
+res.TE.Tload = Tload_C;
+res.TE.Inertia = Inertia_C;
+res.TE.Inertia_d1 = Inertia_d1_C;
+res.TE.Tacc = Tacc_C;
+res.TE.Tvar = Tvar_C;
 res.p_sol=p_sol;
 res.p_pol=p_pol;
 

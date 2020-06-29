@@ -68,7 +68,10 @@ switch sTrajType
         symVar = [p0i symVar];
         % create position function
         pol=x.^(0:3).';
-        q=symVar*pol;    
+        q=symVar*pol; 
+        % calculate derivatives
+        qd1 = diff(q,x);
+        qd2 = diff(qd1,x);
     case 'trap'
         symVar = [];
         % create velocity function

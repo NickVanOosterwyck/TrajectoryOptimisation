@@ -5,7 +5,7 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 %% Nedschroef
 % required
 input.sMechanism = 'Nedschroef';
-input.sTrajType = 'cheb';
+input.sTrajType = 'spline';
 input.timeA = 0;
 input.timeB = 0.0738;
 input.posA = 0;
@@ -18,9 +18,10 @@ input.d_J = 4;
 input.d_Tl = 5;
 
 Ned = TrajOpt(input);
+Ned.optimizeTrajectory();
 
 % traj = Ned.defineTrajectory();
 % prop = Ned.defineProperties();
 % fit = Ned.defineFitness();
 
-Ned.optimizeTrajectory();
+
