@@ -78,7 +78,7 @@ else
         fitFun(i,1)=int(Tm(i).^2,x,breaks(i),breaks(i+1));
     end
 end
-%objFun = sqrt(1/(ub_time-lb_time)*ones(1,k)*objFun); % to prevent NaN
+%fitFun = sqrt(1/(ub_time-lb_time)*ones(1,k)*objFun); % to prevent NaN
 fitFun = 1/(ub_time-lb_time)*ones(1,nPieces)*fitFun; % to prevent NaN
 t_int=toc;
 fprintf('Objective function integrated in %f s. \r\n',t_int);

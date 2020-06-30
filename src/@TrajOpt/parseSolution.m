@@ -11,7 +11,6 @@ sTrajType = obj.input.sTrajType; % trajectory type
 nPieces = obj.input.nPieces; % #intervals
 isTimeResc = obj.input.isTimeResc;
 isPosResc = obj.input.isPosResc;
-DOF = obj.input.DOF;
 
 q = obj.traj.q;
 breaks = obj.traj.breaks;
@@ -24,11 +23,6 @@ J = obj.prop.J;
 fitFun = obj.fit.fitFun;
 
 designVar_sol = obj.sol.designVar_sol;
-
-% determine coefficients
-p_sol = subs(constrVar_sol,designVar.',designVar_sol).';
-p_sol = [p_sol designVar_sol];
-p_sol= double(p_sol);
 
 % fill in trajectory with solution
 q=subs(q,designVar.',designVar_sol);
@@ -73,13 +67,16 @@ Tvar_C = 0.5*J_d1_C*(qd1_C.^2);
 Tm_C = Tload_C + Tvar_C + Tacc_C; %torque equation
 
 syms th
-Inertia_C=subs(J_C,th,q_C); %temp
-Inertia_d1_C=subs(J_d1_C,th,q_C); %temp
+
+for i=1:nPieces
+    Tm_C(i)=subs(Tm_C(i),th,q_C(i));
+    Tacc_C(i)=subs(Tacc_C(i),th,q_C(i));
+    Tvar_C(i)=subs(Tvar_C(i),th,q_C(i));
+end
 
 Tload_C=subs(Tload_C,th,q_C);
-Tacc_C=subs(Tacc_C,th,q_C);
-Tvar_C=subs(Tvar_C,th,q_C);
-Tm_C=subs(Tm_C,th,q_C);
+Inertia_C=subs(J_C,th,q_C); %temp
+Inertia_d1_C=subs(J_d1_C,th,q_C); %temp
 
 % calculate Trms
 syms t
@@ -89,7 +86,7 @@ Trms_C=double(sqrt(subs(fitFun,designVar.',designVar_sol)));
 
 % calculate Tmax & Trms discrete
 y=zeros(nPieces,100);
-for i=nPieces
+for i=1:nPieces
     ts = linspace(breaks_C(i),breaks_C(i+1),100);
     y(i,:) = double(subs(Tm_C(i),t,ts));
 end
@@ -98,10 +95,17 @@ y = reshape(y,1,[]);
 Tmax_dis = max(abs(y));
 Trms_dis = rms(y);
 
+% determine coefficients of polynomial
+p_sol = subs(constrVar_sol,designVar.',designVar_sol).';
+p_sol = [p_sol designVar_sol];
+p_sol = double(p_sol);
+
 % coefficients of standard polynomial
 switch sTrajType
     case {'poly5','poly','cheb','cheb2'}
-        p_pol=zeros(nPieces,DOF+6);
+        p_pol=fliplr(double(coeffs(q_C(i),'All')));
+    case 'spline'
+        p_pol=zeros(nPieces,4);
         for i=1:nPieces
             p_pol(i,:)=fliplr(double(coeffs(q_C(i),'All')));
         end

@@ -77,25 +77,24 @@ switch sTrajType
         % create velocity function
         dt = timeUB-timeLB;
         qd1_max = (posUB-posLB)/((trapRatio*dt)+(dt-2*trapRatio*dt));
-        qd1 = sym.empty(3,1);
-        qd1(1,:) = qd1_max/(trapRatio*dt)*(x-timeLB);
-        qd1(2,:) = qd1_max;
-        qd1(3,:) = -qd1_max/(trapRatio*dt)*(x-timeUB);
+        qd1 = sym.empty(3,0);
+        qd1(1) = qd1_max/(trapRatio*dt)*(x-timeLB);
+        qd1(2) = qd1_max;
+        qd1(3) = -qd1_max/(trapRatio*dt)*(x-timeUB);
         % calculate derivative
         qd2 = diff(qd1,x);
         % solve system
         syms C1 C2 C3
         q = int(qd1,x);
-        eq = sym.empty(3,1);
+        eq = sym.empty(3,0);
         eq(1) = subs(q(1),x,timeLB)+C1 == posLB;
         eq(2) = subs(q(2),x,dt/2+timeLB)+C2 == ...
             abs(posUB-posLB)/2+min(posUB,posLB);
         eq(3) = subs(q(3),x,timeUB)+C3 == posUB;
         sol = solve(eq,[C1 C2 C3]);
-        q = sym.empty(3,1);
-        q(1,:) = q(1)+sol.C1;
-        q(2,:) = q(2)+sol.C2;
-        q(3,:) = q(3)+sol.C3;
+        q(1) = q(1)+sol.C1;
+        q(2) = q(2)+sol.C2;
+        q(3) = q(3)+sol.C3;
         
     case 'custom'
         q=trajFun;
