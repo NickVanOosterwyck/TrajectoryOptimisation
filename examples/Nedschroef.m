@@ -2,16 +2,14 @@
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 
-%% Nedschroef
-clear input
+%% trapezoidal (1/3)
 % required
 input.sMechanism = 'Nedschroef';
-input.sTrajType = 'poly';
+input.sTrajType = 'trap';
 input.timeA = 0;
 input.timeB = 0.0738;
 input.posA = 0;
 input.posB = 3.0299;
-input.DOF = 0;
 input.sSolver = 'quasi-newton';
 
 % optional
@@ -25,6 +23,7 @@ Ned.optimizeTrajectory();
 
 fig = TrajPlot(input);
 fig.addPlot(Ned);
+fig.removeWhitespace();
 
 % traj = Ned.defineTrajectory();
 % prop = Ned.defineProperties();

@@ -6,8 +6,6 @@ classdef TrajPlot < handle
         f       % main figure  handle
         aTr     % axes with trajectory
         aTm     % axes with driving torque
-        lgdTr   % legend trajectory
-        lgdTm   % legend driving torque
         timeA   % start time
         timeB   % end time
         posA    % start position
@@ -50,7 +48,7 @@ classdef TrajPlot < handle
             dy=0.03*(posUB-posLB);
             xlim([obj.timeA-dx,obj.timeB+dx]);
             ylim([posLB-dy,posUB+dy])
-            obj.lgdTr=legend('Location','northeastoutside');
+            legend('Location','northeastoutside');
             hold on
             %plot([obj.timeA,obj.timeB],[obj.posA,obj.posB],'.k'...
             %,'MarkerSize',15,'HandleVisibility','off')
@@ -60,8 +58,8 @@ classdef TrajPlot < handle
             ylabel('$T_m(t) \, [Nm]$')
             obj.aTm.TickLabelInterpreter='latex';
             xlim([obj.timeA-dx,obj.timeB+dx]);
-            obj.lgdTm=legend('Location','northeastoutside');
-            obj.lgdTm.Visible='off';
+            lgdTm=legend('Location','northeastoutside','Visible','off');
+            lgdTm.Visible='off';
             hold on
             yline(0,'k','LineWidth',0.1,'HandleVisibility','off');
         end

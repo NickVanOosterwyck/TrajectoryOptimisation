@@ -84,10 +84,18 @@ inputC.posB = input.posB;
 %%% sSolver
 % validate field
 if ~isfield(input, 'sSolver')
-    error('Field ''sSolver'' cannot be ommitted from ''input''');
+    input.sSolver = [];
 else
     validstrings = {'directCal','interior-point','quasi-newton','ga','intlab'};
     validatestring(input.sSolver,validstrings);
+end
+% extra checks
+switch inputC.sTrajType
+    case {'poly','cheb','cheb2','spline','custom'}
+        if isempty(input.sSolver)
+            error(['Field ''sSolver'' cannot be ommitted from ''input'''...
+                'for the selected trajectory type ''%s'''],input.sTrajType);
+        end
 end
 inputC.sSolver = input.sSolver;
 
