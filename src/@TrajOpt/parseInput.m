@@ -119,21 +119,37 @@ inputC.DOF = input.DOF;
 
 %%% isTimeResc
 if ~isfield(input, 'isTimeResc')
-    input.isTimeResc = true;
+    input.isTimeResc = false;
 else
     if ~islogical(input.isTimeResc)
         error('Field ''isTimeResc'' must be logical.')
     end
 end
+% extra checks
+switch inputC.sTrajType
+    case {'spline','trap','custom'}
+        if input.isTimeResc
+            error(['The selected trajectory type ''%s'' does not allow ',...
+                'field ''isTimeResc. to be true.'''],input.sTrajType)
+        end
+end
 inputC.isTimeResc = input.isTimeResc;
 
 %%% isPosResc
 if ~isfield(input, 'isPosResc')
-    input.isPosResc = true;
+    input.isPosResc = false;
 else
     if ~islogical(input.isPosResc)
         error('Field ''isPosResc'' must be logical.')
     end
+end
+% extra checks
+switch inputC.sTrajType
+    case {'spline','trap','custom'}
+        if input.isPosResc
+            error(['The selected trajectory type ''%s'' does not allow ',...
+                'field ''isPosResc. to be true.'''],input.sTrajType)
+        end
 end
 inputC.isPosResc = input.isPosResc;
 

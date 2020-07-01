@@ -115,6 +115,7 @@ end
 
 % set ouput
 res.q = q_C;
+res.breaks = breaks_C;
 res.qd1 = qd1_C;
 res.qd2 = qd2_C;
 res.Tm = Tm_C;
