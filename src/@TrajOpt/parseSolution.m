@@ -102,7 +102,7 @@ p_sol = double(p_sol);
 
 % coefficients of standard polynomial
 switch sTrajType
-    case {'poly5','poly','cheb','cheb2'}
+    case {'poly5','poly','cheb','chebU'}
         p_pol=fliplr(double(coeffs(q_C(i),'All')));
     case 'spline'
         p_pol=zeros(nPieces,4);

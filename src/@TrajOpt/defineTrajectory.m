@@ -38,7 +38,7 @@ syms x % time variable
 
 % define position function
 switch sTrajType
-    case {'poly5','poly','cheb','cheb2'}
+    case {'poly5','poly','cheb','chebU'}
         % define symbolic variables
         syms p0
         symVar=sym('p', [1 5+DOF]);
@@ -54,7 +54,7 @@ switch sTrajType
             case 'cheb'
                 pol=chebyshevT(0:5+DOF,x).';
                 q=symVar*pol;
-            case 'cheb2'
+            case 'chebU'
                 pol=chebyshevU(0:5+DOF,x).';
                 q=symVar*pol;
         end
@@ -116,7 +116,7 @@ end
 
 %% define constrained and design variables
 switch sTrajType
-    case {'poly5','poly','cheb','cheb2'}
+    case {'poly5','poly','cheb','chebU'}
         constrVar = symVar(1:6).';
         designVar = symVar(7:end).'; % higher degree coeff.
     case 'spline'
@@ -131,7 +131,7 @@ end
 %% define trajectory constraint equations
 % start and end constraint equations
 switch sTrajType
-    case {'poly','poly5','cheb','cheb2','spline'}
+    case {'poly','poly5','cheb','chebU','spline'}
         constrEq_bnd = sym.empty(6,0);
         constrEq_bnd(1,1) = subs(q(1),x,timeLB)==posLB;
         constrEq_bnd(2,1) = subs(qd1(1),x,timeLB)==0;
@@ -178,7 +178,7 @@ constrEq=[constrEq_bnd; constrEq_br; constrEq_var];
 % solve equations (eq) by solving constrained variables (constVar)
 % as a function of the design variables (designVar)
 switch sTrajType
-    case {'poly5','poly','cheb','cheb2','spline'}
+    case {'poly5','poly','cheb','chebU','spline'}
         fprintf('Solving constraint equations... \n');
         tic
         sol = solve(constrEq,constrVar);

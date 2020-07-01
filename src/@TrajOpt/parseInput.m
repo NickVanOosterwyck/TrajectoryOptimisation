@@ -33,7 +33,7 @@ inputC.sMechanism = input.sMechanism;
 if ~isfield(input, 'sTrajType')
     error('Field ''sTrajType'' cannot be ommitted from ''input''');
 else
-    validTrajTypes = {'trap','poly5','poly','cheb','cheb2','spline','custom'};
+    validTrajTypes = {'trap','poly5','poly','cheb','chebU','spline','custom'};
     validatestring(input.sTrajType,validTrajTypes);
 end
 inputC.sTrajType = input.sTrajType;
@@ -91,7 +91,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly','cheb','cheb2','spline','custom'}
+    case {'poly','cheb','chebU','spline','custom'}
         if isempty(input.sSolver)
             error(['Field ''sSolver'' cannot be ommitted from ''input'''...
                 'for the selected trajectory type ''%s'''],input.sTrajType);
@@ -118,7 +118,7 @@ switch inputC.sTrajType
             error(['The selected trajectory',...
                 'type does not allow any DOF.'])
         end
-    case {'poly','cheb','cheb2','spline','custom'}
+    case {'poly','cheb','chebU','spline','custom'}
         if input.DOF == 0
             warning('The selected trajectory is not optimisable.')
         end
@@ -176,7 +176,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','poly','cheb','cheb2','spline','custom'}
+    case {'poly5','poly','cheb','chebU','spline','custom'}
         if ~isempty(input.trapRatio)
             error(['The selected trajectory type ''%s'' does not allow a',...
                 'field ''trapRatio.'''],input.sTrajType)
@@ -195,7 +195,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','trap','poly','cheb','cheb2','spline'}
+    case {'poly5','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.trajFun)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''trajFun.'''],input.sTrajType)
@@ -214,7 +214,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','trap','poly','cheb','cheb2','spline'}
+    case {'poly5','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.trajFunBreaks)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''trajFunBreaks'''],input.sTrajType)
@@ -347,7 +347,7 @@ inputC.sSolver = input.sSolver;
 
 %%% nPieces
 switch inputC.sTrajType
-    case {'poly5','poly','cheb','cheb2'}
+    case {'poly5','poly','cheb','chebU'}
         inputC.nPieces = 1;
     case {'trap'}
         inputC.nPieces = 3;
