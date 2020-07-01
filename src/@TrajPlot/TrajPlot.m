@@ -11,7 +11,7 @@ classdef TrajPlot < handle
         posA    % start position
         posB    % end position
         iPlot
-        colorsUA
+        colorMap
     end
     
     methods
@@ -33,14 +33,20 @@ classdef TrajPlot < handle
             
             % colors
             obj.iPlot=0;
-            obj.colorsUA = [0, 68, 102;
+            colorsUA = [0, 68, 102;
                 136, 017, 051;
-                187, 204, 204;
-                136, 153, 153;
                 051, 153, 204;
                 221, 153, 017;
-                170, 170 ,000]./255;
-            
+                170, 170 ,000
+                187, 204, 204;]./255;
+            colorsMatlab = [0, 0.4470, 0.7410;
+                0.8500, 0.3250, 0.0980;
+                0.9290, 0.6940, 0.1250;
+                0.4940, 0.1840, 0.5560;
+                0.4660, 0.6740, 0.1880;
+                0.3010, 0.7450, 0.9330;
+                0.6350, 0.0780, 0.1840];
+            obj.colorMap = [colorsUA;colorsMatlab];
             obj.aTr=subplot(2,1,1);
             xlabel('$t \, [s]$')
             ylabel('$\theta(t) \, [^{\circ}]$')

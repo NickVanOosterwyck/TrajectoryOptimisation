@@ -30,10 +30,10 @@ function [] = addPlot(obj,TrajOpt,varargin)
             hold on
             if isa(TrajOpt,'TrajOpt')
                 fplot(q(1),[breaks(1) breaks(2)],'LineWidth',2,...
-                        'Color',obj.colorsUA(obj.iPlot,:),'DisplayName',num2str(label));
+                        'Color',obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label));
                 for i=1:nPieces
                     fplot(q(i),[breaks(i) breaks(i+1)],'LineWidth',2,...
-                        'Color',obj.colorsUA(obj.iPlot,:),'HandleVisibility','off');
+                        'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                     br_q1=subs(q(i),t,breaks(i));
                     br_q2=subs(q(i),t,breaks(i+1));
                     plot([breaks(i) breaks(i+1)],[br_q1 br_q2],'.k'...
@@ -41,7 +41,7 @@ function [] = addPlot(obj,TrajOpt,varargin)
                 end
             else
                 plot(t,q,'LineWidth',2,'Color',...
-                    obj.colorsUA(obj.iPlot,:),'DisplayName',num2str(label));
+                    obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label));
             end
             
             axes(obj.aTm)
@@ -51,11 +51,11 @@ function [] = addPlot(obj,TrajOpt,varargin)
                     br_Tm1=subs(Tm(i-1),t,breaks(i));
                     br_Tm2=subs(Tm(i),t,breaks(i));
                     plot([breaks(i) breaks(i)],[br_Tm1 br_Tm2],'LineWidth',2,...
-                        'Color',obj.colorsUA(obj.iPlot,:),'HandleVisibility','off');
+                        'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                 end
                 for i=1:nPieces
                     fplot(Tm(i),[breaks(i) breaks(i+1)],'LineWidth',2,...
-                        'Color',obj.colorsUA(obj.iPlot,:),'HandleVisibility','off');
+                        'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                     br_Tm1=subs(Tm(i),t,breaks(i));
                     br_Tm2=subs(Tm(i),t,breaks(i+1));
                     plot([breaks(i) breaks(i+1)],[br_Tm1 br_Tm2],'.k'...
@@ -63,7 +63,7 @@ function [] = addPlot(obj,TrajOpt,varargin)
                 end
             else
                 plot(t,Tm,'LineWidth',2,'Color',...
-                    obj.colorsUA(obj.iPlot,:),'DisplayName',num2str(label)...
+                    obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label)...
                     ,'HandleVisibility','off');
             end
             

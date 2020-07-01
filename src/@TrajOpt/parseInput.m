@@ -17,10 +17,6 @@ function [inputC] = parseInput(obj,input)
 % of the GNU license. See LICENSE file in repo for details.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% check and validate required fields
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %%% sMechanism
 % validate field
 if ~isfield(input, 'sMechanism')
@@ -98,10 +94,6 @@ switch inputC.sTrajType
         end
 end
 inputC.sSolver = input.sSolver;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% check optional fields (and assign default values if empty)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% DOF
 % validate field and assign default value if empty
@@ -330,16 +322,6 @@ if input.ub < input.lb
         'the value of field ''lb''.'])
 end
 inputC.ub = input.ub;
-
-%%% sSolver
-% validate field
-if ~isfield(input, 'sSolver')
-    error('Field ''sSolver'' cannot be ommitted from ''input''');
-else
-    validstrings = {'directCal','interior-point','quasi-newton','ga','intlab'};
-    validatestring(input.sSolver,validstrings);
-end
-inputC.sSolver = input.sSolver;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % assign dependent properties
