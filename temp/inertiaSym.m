@@ -19,7 +19,7 @@ input.d_J = 4;
 input.d_Tl = 5;
 input.isTimeResc = true;
 input.sFitNot = 'vpa';
-input.digits = 6;
+input.digits = 10;
 input.isJSym = true;
 
 cheb2=TrajOpt(input);
@@ -29,6 +29,7 @@ cheb2.defineFitness();
 
 %% create fitnessfunction 
 fitFun = cheb2.fit.fitFun;
+digits = cheb2.input.digits;
 designVar = cheb2.traj.var.designVar;
 DOF = cheb2.input.DOF;
 a_J = cheb2.prop.a_J;
@@ -39,7 +40,7 @@ switch sFitNot
     case 'frac'
         fitFun_vec = char(fitFun);
     case 'vpa'
-        fitFun_vec = char(vpa(fitFun));
+        fitFun_vec = char(vpa(fitFun,digits));
 end
 
 % replace trajectory parameters
@@ -62,5 +63,10 @@ fitFun_vec = vectorize(fitFun_vec);
 fitFun_vec = str2func(['@(x,a)' fitFun_vec]);
 t_vec=toc;
 
+% check
 a_J_sol = [0.0036267865;-0.0000971262;0.0154910117;-0.0102045912;0.0016869776];
-sqrt(fitFun_vec([0;0],a_J_sol))
+sqrt(fitFun_vec([0;0],a_J_sol)) % must be 22.4736
+
+% save new vectorized function
+save([fileparts(matlab.desktop.editor.getActiveFilename) ...
+ '\fitFun_vec.mat'],'fitFun_vec')
