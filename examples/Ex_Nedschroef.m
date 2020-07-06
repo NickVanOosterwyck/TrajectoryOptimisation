@@ -25,7 +25,7 @@ clear input
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'poly5';
 input.timeA = 0;
-input.timeB = 0.0738;
+input.timeB = 0.5;
 input.posA = 0;
 input.posB = 3.0299;
 

@@ -19,6 +19,7 @@ nPieces = obj.input.nPieces;
 isTimeResc = obj.input.isTimeResc;
 isPosResc = obj.input.isPosResc;
 sFitNot = obj.input.sFitNot;
+digits = obj.input.digits;
 isHornerNot = obj.input.isHornerNot;
 
 % Read properties
@@ -98,17 +99,11 @@ end
 tic
 fprintf('Vectorization of objective function started. \n');
 if DOF>0
-    old = arrayfun(@char, designVar, 'uniform', false); %sym2cell
-    new=cell(DOF,1);
-    for i=1:DOF
-        new(i,1) = cellstr(['x(' num2str(i) ',:)']);
-    end
-    
     switch sFitNot
         case 'frac'
             fitFun_vec = char(fitFun);
         case 'vpa'
-            fitFun_vec = char(vpa(fitFun));
+            fitFun_vec = char(vpa(fitFun,digits));
         case 'intval'
             [C,T] = coeffs(fitFun);
             [N,D] = numden(C);
@@ -119,6 +114,11 @@ if DOF>0
                     '))/intval(num2str(' char(D(i)) '))*' char(T(i)) ')'];
             end
             fitFun_vec(1)=[]; % remove first '+' sign
+    end
+    old = arrayfun(@char, designVar, 'uniform', false); %sym2cell
+    new=cell(DOF,1);
+    for i=1:DOF
+        new(i,1) = cellstr(['x(' num2str(i) ',:)']);
     end
     fitFun_vec = replace(fitFun_vec,old,new);
     fitFun_vec = vectorize(fitFun_vec);

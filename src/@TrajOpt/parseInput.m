@@ -214,16 +214,6 @@ switch inputC.sTrajType
 end
 inputC.trajFunBreaks = input.trajFunBreaks;
 
-%%% digits
-% validate field and assign default value if empty
-if ~isfield(input,'digits')
-    input.digits = [];
-else
-    mustBeInteger(input.digits);
-    mustBeGreaterThanOrEqual(input.digits,2);
-end
-inputC.digits = input.digits;
-
 %%% sInterp
 % check field
 if ~isfield(input, 'sInterp')
@@ -253,6 +243,20 @@ else
     mustBePositive(input.d_Tl);
 end
 inputC.d_Tl = input.d_Tl;
+
+%%% isJSym
+if ~isfield(input, 'isJSym')
+    input.isJSym = false;
+else
+    if ~islogical(input.isJSym)
+        error('Field ''isJSym'' must be logical.')
+    end
+end
+% extra checks
+if input.isJSym && isempty(input.d_J)
+    error('Field ''d_J'' must be specified when field ''isJSym'' is true.')
+end
+inputC.isJSym = input.isJSym;
 
 %%% dataJ
 % validate field and assign default value if empty
@@ -289,6 +293,21 @@ else
     validatestring(input.sFitNot,validstrings);
 end
 inputC.sFitNot = input.sFitNot;
+
+%%% digits
+% validate field and assign default value if empty
+if ~isfield(input,'digits')
+    switch input.sFitNot
+        case 'vpa'
+            input.digits = 32;
+        otherwise
+            input.digits = [];
+    end
+else
+    mustBeInteger(input.digits);
+    mustBeGreaterThanOrEqual(input.digits,2);
+end
+inputC.digits = input.digits;
 
 %%% isHornerNot
 if ~isfield(input, 'isHornerNot')
