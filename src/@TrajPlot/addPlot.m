@@ -18,9 +18,14 @@ function [] = addPlot(obj,TrajOpt,varargin)
                 switch TrajOpt.input.sTrajType
                     case {'trap','poly5'}
                         label = TrajOpt.input.sTrajType;
-                    case {'poly','cheb','chebU','spline','custom'}
+                    case {'poly','cheb','chebU'}
                         label = strcat(TrajOpt.input.sTrajType,...
-                    num2str(TrajOpt.input.DOF));
+                            num2str(TrajOpt.input.DOF+5));
+                    case {'spline'}
+                        label = strcat(TrajOpt.input.sTrajType,...
+                            num2str(TrajOpt.input.nPieces));
+                    case {'custom'}
+                        label = strcat('traj',obj.iPlot);
                 end
             else
                 label=varargin{1};
@@ -29,10 +34,10 @@ function [] = addPlot(obj,TrajOpt,varargin)
             axes(obj.aTr)
             hold on
             if isa(TrajOpt,'TrajOpt')
-                fplot(q(1),[breaks(1) breaks(2)],'LineWidth',2,...
+                fplot(q(1),[breaks(1) breaks(2)],'LineWidth',1.5,...
                         'Color',obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label));
                 for i=1:nPieces
-                    fplot(q(i),[breaks(i) breaks(i+1)],'LineWidth',2,...
+                    fplot(q(i),[breaks(i) breaks(i+1)],'LineWidth',1.5,...
                         'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                     br_q1=subs(q(i),t,breaks(i));
                     br_q2=subs(q(i),t,breaks(i+1));
@@ -40,7 +45,7 @@ function [] = addPlot(obj,TrajOpt,varargin)
                         ,'MarkerSize',14,'HandleVisibility','off');
                 end
             else
-                plot(t,q,'LineWidth',2,'Color',...
+                plot(t,q,'LineWidth',1.5,'Color',...
                     obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label));
             end
             
@@ -50,11 +55,11 @@ function [] = addPlot(obj,TrajOpt,varargin)
                 for i=2:nPieces % add connecting lines (discontinous torque)
                     br_Tm1=subs(Tm(i-1),t,breaks(i));
                     br_Tm2=subs(Tm(i),t,breaks(i));
-                    plot([breaks(i) breaks(i)],[br_Tm1 br_Tm2],'LineWidth',2,...
+                    plot([breaks(i) breaks(i)],[br_Tm1 br_Tm2],'LineWidth',1.5,...
                         'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                 end
                 for i=1:nPieces
-                    fplot(Tm(i),[breaks(i) breaks(i+1)],'LineWidth',2,...
+                    fplot(Tm(i),[breaks(i) breaks(i+1)],'LineWidth',1.5,...
                         'Color',obj.colorMap(obj.iPlot,:),'HandleVisibility','off');
                     br_Tm1=subs(Tm(i),t,breaks(i));
                     br_Tm2=subs(Tm(i),t,breaks(i+1));
@@ -62,7 +67,7 @@ function [] = addPlot(obj,TrajOpt,varargin)
                         ,'MarkerSize',14,'HandleVisibility','off');
                 end
             else
-                plot(t,Tm,'LineWidth',2,'Color',...
+                plot(t,Tm,'LineWidth',1.5,'Color',...
                     obj.colorMap(obj.iPlot,:),'DisplayName',num2str(label)...
                     ,'HandleVisibility','off');
             end

@@ -1,6 +1,6 @@
 %% init
 clear; clc; close all;
-addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
+addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..\..']))
 
 %%
 clear input
