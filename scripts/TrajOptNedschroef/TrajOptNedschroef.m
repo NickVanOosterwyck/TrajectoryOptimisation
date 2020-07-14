@@ -204,12 +204,11 @@ pauseA.breaks = [0.07375 0.1675];
 pauseB.q = 0;
 pauseB.breaks = [0.2250 0.3];
 
-% trap
 trap = combineSolutions(trapF,pauseA,trapB,pauseB);
 poly5 = combineSolutions(poly5F,pauseA,poly5B,pauseB);
 cheb7 = combineSolutions(cheb7F,pauseA,cheb7B,pauseB);
 cheb9 = combineSolutions(cheb9F,pauseA,cheb9B,pauseB);
-%cheb13 = combineSolutions(cheb13,pauseA,cheb13B,pauseB);
+cheb13 = combineSolutions(cheb13,pauseA,cheb13B,pauseB);
 
 %% plot
 fig = TrajPlot(input);
