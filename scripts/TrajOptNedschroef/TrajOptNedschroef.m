@@ -198,17 +198,25 @@ input.isPosResc = true;
 cheb13B = TrajOpt(input);
 cheb13B.optimizeTrajectory();
 
+%% combine solutions
+pauseA.q = 3.0299;
+pauseA.breaks = [0.07375 0.1675];
+pauseB.q = 0;
+pauseB.breaks = [0.2250 0.3];
+
+% trap
+trap = combineSolutions(trapF,pauseA,trapB,pauseB);
+poly5 = combineSolutions(poly5F,pauseA,poly5B,pauseB);
+cheb7 = combineSolutions(cheb7F,pauseA,cheb7B,pauseB);
+cheb9 = combineSolutions(cheb9F,pauseA,cheb9B,pauseB);
+%cheb13 = combineSolutions(cheb13,pauseA,cheb13B,pauseB);
+
 %% plot
 fig = TrajPlot(input);
-fig.addPlot(trapF);
-fig.addPlot(trapB);
-fig.addPlot(poly5F);
-fig.addPlot(poly5B);
-fig.addPlot(cheb7F);
-fig.addPlot(cheb7B);
-fig.addPlot(cheb9F);
-fig.addPlot(cheb9B);
-fig.addPlot(cheb13F);
-fig.addPlot(cheb13B);
+fig.addPlot(trap,'trap');
+fig.addPlot(poly5,'poly5');
+fig.addPlot(cheb7,'cheb7');
+fig.addPlot(cheb9,'cheb9');
+fig.addPlot(cheb13F,'cheb13F');
 %fig.removeWhitespace();
 
