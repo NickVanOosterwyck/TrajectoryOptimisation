@@ -15,9 +15,10 @@ input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
 % optional
-input.d_J = 4;
+input.d_J = 7;
 input.d_Tl = 5;
 input.isTimeResc = true;
+input.isPosResc = true;
 input.sFitNot = 'vpa';
 input.digits = 10;
 input.isJSym = true;
@@ -64,7 +65,7 @@ fitFun_vec = str2func(['@(x,a)' fitFun_vec]);
 t_vec=toc;
 
 % check
-a_J_sol = [0.0036267865;-0.0000971262;0.0154910117;-0.0102045912;0.0016869776];
+a_J_sol = [0.0124380143;0.0000609762;-0.0175730484;0.0000630271;0.0088858238];
 sqrt(fitFun_vec([0;0],a_J_sol)) % must be 22.4736
 
 % save new vectorized function
