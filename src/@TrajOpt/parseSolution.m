@@ -84,16 +84,28 @@ syms t
 Trms_C=double(sqrt(subs(fitFun,designVar.',designVar_sol)));
 %Trms_C=double(sqrt(1/2*int(Tm_C^2,t,t_A,t_B))); % alternative
 
-% calculate Tmax & Trms discrete
-y=zeros(nPieces,100);
+% evaluate discrete
+ts = 0.00025;
+t_dis = double(breaks_C(1):ts:breaks_C(end));
+ind = 1;
 for i=1:nPieces
-    ts = linspace(breaks_C(i),breaks_C(i+1),100);
-    y(i,:) = double(subs(Tm_C(i),t,ts));
+    if i ~= nPieces
+    t_temp = t_dis(t_dis>=breaks_C(i) & t_dis<breaks_C(i+1));
+    else
+        t_temp = t_dis(t_dis>=breaks_C(i) & t_dis<=breaks_C(i+1));
+    end
+    n=length(t_temp);
+    q_dis(ind:ind+n-1) = double(subs(q_C(i),t,t_temp));
+    qd1_dis(ind:ind+n-1) = double(subs(qd1_C(i),t,t_temp));
+    qd2_dis(ind:ind+n-1) = double(subs(qd2_C(i),t,t_temp));
+    Tm_dis(ind:ind+n-1) = double(subs(Tm_C(i),t,t_temp));
+    ind=ind+n;
 end
 
-y = reshape(y,1,[]);
-Tmax_dis = max(abs(y));
-Trms_dis = rms(y);
+% calculate Tmax & Trms discrete
+%Tm_tot = reshape(Tm_dis,1,[]);
+Tmax_dis = max(abs(Tm_dis));
+Trms_dis = rms(Tm_dis);
 
 % determine coefficients of polynomial
 p_sol = subs(constrVar_sol,designVar.',designVar_sol).';
@@ -115,16 +127,22 @@ end
 
 % set ouput
 res.q = q_C;
-res.breaks = breaks_C;
 res.qd1 = qd1_C;
 res.qd2 = qd2_C;
+res.breaks = breaks_C;
 res.Tm = Tm_C;
 %res.J = J_C;
 %res.Jd1 = J_d1_C;
 %res.Tl = Tl_C;
 res.Trms = Trms_C;
 res.Trms_dis = Trms_dis;
-res.Tmax = Tmax_dis;
+res.Tmax_dis = Tmax_dis;
+res.DIS.t = t_dis;
+res.DIS.q = q_dis;
+res.DIS.qd1 = qd1_dis;
+res.DIS.qd2 = qd2_dis;
+res.DIS.Tm = Tm_dis;
+res.DIS.ts = ts;
 res.TE.Tload = Tload_C;
 res.TE.Inertia = Inertia_C;
 res.TE.Inertia_d1 = Inertia_d1_C;

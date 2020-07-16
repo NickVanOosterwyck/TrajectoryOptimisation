@@ -27,7 +27,7 @@ for j = 1:length(sol)
         breaks = sol(j).res.breaks;
         nPieces = sol(j).input.nPieces;
     else
-        q=sol(j).q/pi*180;
+        q=sol(j).q./pi.*180;
         breaks = sol(j).breaks;
         nPieces = sol(j).nPieces;
     end

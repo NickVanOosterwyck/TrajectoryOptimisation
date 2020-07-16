@@ -198,19 +198,44 @@ input.isPosResc = true;
 cheb13B = TrajOpt(input);
 cheb13B.optimizeTrajectory();
 
-%% combine solutions
+%% combine symbolically
 pauseA.q = 3.0299;
 pauseA.breaks = [0.07375 0.1675];
 pauseB.q = 0;
 pauseB.breaks = [0.2250 0.3];
 
-trap = combineSolutions(trapF,pauseA,trapB,pauseB);
-poly5 = combineSolutions(poly5F,pauseA,poly5B,pauseB);
-cheb7 = combineSolutions(cheb7F,pauseA,cheb7B,pauseB);
-cheb9 = combineSolutions(cheb9F,pauseA,cheb9B,pauseB);
-cheb13 = combineSolutions(cheb13,pauseA,cheb13B,pauseB);
+trap = combineSolutions('sym',trapF,pauseA,trapB,pauseB);
+poly5 = combineSolutions('sym',poly5F,pauseA,poly5B,pauseB);
+cheb7 = combineSolutions('sym',cheb7F,pauseA,cheb7B,pauseB);
+cheb9 = combineSolutions('sym',cheb9F,pauseA,cheb9B,pauseB);
+cheb13 = combineSolutions('sym',cheb13,pauseA,cheb13B,pauseB);
 
-%% plot
+%% combine discrete
+pauseA.q = 3.0299;
+pauseA.breaks = [0.07375 0.1675];
+pauseA.ts = 0.0025;
+pauseB.q = 0;
+pauseB.breaks = [0.2250 0.3];
+pauseB.ts = 0.0025;
+
+trap = combineSolutions('dis',trapF,pauseA,trapB,pauseB);
+poly5 = combineSolutions('dis',poly5F,pauseA,poly5B,pauseB);
+cheb7 = combineSolutions('dis',cheb7F,pauseA,cheb7B,pauseB);
+cheb9 = combineSolutions('dis',cheb9F,pauseA,cheb9B,pauseB);
+cheb13 = combineSolutions('dis',cheb13,pauseA,cheb13B,pauseB);
+
+%% write discrete
+writematrix(trap.t.','OptimisedTrajectoriesDiscrete.xlsx','Range','A3')
+writematrix(trap.q.','OptimisedTrajectoriesDiscrete.xlsx','Range','B3')
+writematrix(trap.Tm.','OptimisedTrajectoriesDiscrete.xlsx','Range','C3')
+writematrix(poly5.q.','OptimisedTrajectoriesDiscrete.xlsx','Range','D3')
+writematrix(poly5.Tm.','OptimisedTrajectoriesDiscrete.xlsx','Range','E3')
+writematrix(cheb7.q.','OptimisedTrajectoriesDiscrete.xlsx','Range','F3')
+writematrix(cheb7.Tm.','OptimisedTrajectoriesDiscrete.xlsx','Range','G3')
+writematrix(cheb9.q.','OptimisedTrajectoriesDiscrete.xlsx','Range','H3')
+writematrix(cheb9.Tm.','OptimisedTrajectoriesDiscrete.xlsx','Range','I3')
+
+%% plot symbolically
 fig = TrajPlot(input);
 fig.addPlot(trap,'trap');
 fig.addPlot(poly5,'poly5');
@@ -218,4 +243,5 @@ fig.addPlot(cheb7,'cheb7');
 fig.addPlot(cheb9,'cheb9');
 fig.addPlot(cheb13F,'cheb13F');
 %fig.removeWhitespace();
+
 
