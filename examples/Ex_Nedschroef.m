@@ -77,7 +77,7 @@ input.d_Tl = 5;
 spline2 = TrajOpt(input);
 spline2.optimizeTrajectory();
 
-%% plot
+%% plot solutions
 fig = TrajPlot(input);
 fig.addPlot(trap);
 fig.addPlot(poly0);
@@ -85,4 +85,7 @@ fig.addPlot(cheb2);
 fig.addPlot(spline2);
 %fig.removeWhitespace();
 
-
+%% plot objective functions
+plotFitFun(cheb2)
+plotFitFun(spline2)
+plotFitFun(poly)

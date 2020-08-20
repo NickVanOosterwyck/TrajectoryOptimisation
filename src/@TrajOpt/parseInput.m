@@ -319,28 +319,6 @@ else
 end
 inputC.isHornerNot = input.isHornerNot;
 
-%%% lb
-% validate field and assign default value if empty
-if ~isfield(input,'lb')
-    input.lb = [];
-else
-    mustBeNumeric(input.lb);
-end
-inputC.lb = input.lb;
-
-%%% ub
-% validate field and assign default value if empty
-if ~isfield(input,'ub')
-    input.ub = [];
-else
-    mustBeNumeric(input.ub);
-end
-% extra checks
-if input.ub < input.lb
-    error(['The value of field ''ub'' must be greater than',...
-        'the value of field ''lb''.'])
-end
-inputC.ub = input.ub;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % assign dependent properties
@@ -357,6 +335,43 @@ switch inputC.sTrajType
     case {'custom'}
         inputC.nPieces = size(inputC.trajFun,1);
 end
+
+%%% lb
+% validate field and assign default value if empty
+if ~isfield(input,'lb')
+    switch inputC.sTrajType
+        case 'spline'
+            input.lb = min(inputC.posA,inputC.posB);
+        case {'cheb','cheb2'}
+            input.lb = -1;
+        otherwise
+            input.lb = [];
+    end
+else
+    mustBeNumeric(input.lb);
+end
+inputC.lb = input.lb;
+
+%%% ub
+% validate field and assign default value if empty
+if ~isfield(input,'ub')
+    switch inputC.sTrajType
+        case 'spline'
+            input.ub = max(inputC.posA,inputC.posB);
+        case {'cheb','cheb2'}
+            input.ub = 1;
+        otherwise
+            input.ub = [];
+    end
+else
+    mustBeNumeric(input.ub);
+end
+% extra checks
+if input.ub < input.lb
+    error(['The value of field ''ub'' must be greater than',...
+        'the value of field ''lb''.'])
+end
+inputC.ub = input.ub;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % assign validated input to property
