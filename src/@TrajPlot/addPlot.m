@@ -3,15 +3,15 @@ obj.iPlot=obj.iPlot+1;
 
 % label
 if isempty(varargin)
-    switch sol.input.sTrajType
+    switch sol(1).input.sTrajType
         case {'trap','poly5'}
-            label = sol.input.sTrajType;
+            label = sol(1).input.sTrajType;
         case {'poly','cheb','chebU'}
-            label = strcat(sol.input.sTrajType,...
-                num2str(sol.input.DOF+5));
+            label = strcat(sol(1).input.sTrajType,...
+                num2str(sol(1).input.DOF+5));
         case {'spline'}
-            label = strcat(sol.input.sTrajType,...
-                num2str(sol.input.nPieces));
+            label = strcat(sol(1).input.sTrajType,...
+                num2str(sol(1).input.nPieces));
         case {'custom'}
             label = strcat('traj',obj.iPlot);
     end
@@ -133,10 +133,16 @@ end
 
 if j>1
     axes(obj.aTr)
-    xlim([sol(1).breaks(1) sol(end).breaks(end)]);
+    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
+    
+    axes(obj.aSp)
+    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
+    
+    axes(obj.aAc)
+    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
     
     axes(obj.aTm)
-    xlim([sol(1).breaks(1) sol(end).breaks(end)]);
+    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
 end
 
 end

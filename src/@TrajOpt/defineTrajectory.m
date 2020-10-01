@@ -95,6 +95,11 @@ switch sTrajType
         q(1) = q(1)+sol.C1;
         q(2) = q(2)+sol.C2;
         q(3) = q(3)+sol.C3;
+    case 'pause'
+        symVar = [];
+        q=sym(posLB);
+        qd1=diff(q);
+        qd2=diff(qd1);
     case 'custom'
         q=trajFun;
         qd1=diff(q);

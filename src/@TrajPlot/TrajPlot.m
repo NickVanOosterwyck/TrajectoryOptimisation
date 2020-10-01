@@ -20,13 +20,13 @@ classdef TrajPlot < handle
         function obj = TrajPlot(input)
             obj.f = figure('Name','Trajectory Optimization'...
                 ,'Renderer','painters');
-            obj.timeA=input.timeA;
-            obj.timeB=input.timeB;
-            obj.posA=input.posA/pi*180;
-            obj.posB=input.posB/pi*180;
-            
-            posLB = min(obj.posA,obj.posB);
-            posUB = max(obj.posA,obj.posB);
+%             obj.timeA=input.timeA;
+%             obj.timeB=input.timeB;
+%             obj.posA=input.posA/pi*180;
+%             obj.posB=input.posB/pi*180;
+%             
+%             posLB = min(obj.posA,obj.posB);
+%             posUB = max(obj.posA,obj.posB);
             
             % latex
             set(0,'DefaultTextInterpreter','latex');
@@ -53,29 +53,29 @@ classdef TrajPlot < handle
             obj.aTr=subplot(4,1,1);
             xlabel('$t \, [s]$')
             ylabel('$\theta \, [^{\circ}]$')
-            dx=0.03*(obj.timeB-obj.timeA);
-            dy=0.03*(posUB-posLB);
-            xlim([obj.timeA-dx,obj.timeB+dx]);
-            ylim([posLB-dy,posUB+dy])
+%             dx=0.03*(obj.timeB-obj.timeA);
+%             dy=0.03*(posUB-posLB);
+%             xlim([obj.timeA-dx,obj.timeB+dx]);
+%             ylim([posLB-dy,posUB+dy])
             legend('Location','northeastoutside');
             
             obj.aSp=subplot(4,1,2);
             xlabel('$t \, [s]$')
             ylabel('$\dot{\theta} \, [^{\circ}/s]$')
-            dx=0.03*(obj.timeB-obj.timeA);
-            %dy=0.03*(posUB-posLB);
-            xlim([obj.timeA-dx,obj.timeB+dx]);
-            %ylim([posLB-dy,posUB+dy])
+%             dx=0.03*(obj.timeB-obj.timeA);
+%             dy=0.03*(posUB-posLB);
+%             xlim([obj.timeA-dx,obj.timeB+dx]);
+%             ylim([posLB-dy,posUB+dy])
             lgd = legend('Location','northeastoutside');
             lgd.Visible = 'off';
             
             obj.aAc=subplot(4,1,3);
             xlabel('$t \, [s]$')
             ylabel('$\ddot{\theta} \, [^{\circ}/s^2]$')
-            dx=0.03*(obj.timeB-obj.timeA);
-            %dy=0.03*(posUB-posLB);
-            xlim([obj.timeA-dx,obj.timeB+dx]);
-            %ylim([posLB-dy,posUB+dy])
+%             dx=0.03*(obj.timeB-obj.timeA);
+%             dy=0.03*(posUB-posLB);
+%             xlim([obj.timeA-dx,obj.timeB+dx]);
+%             ylim([posLB-dy,posUB+dy])
             lgd = legend('Location','northeastoutside');
             lgd.Visible = 'off';
             
@@ -83,7 +83,7 @@ classdef TrajPlot < handle
             xlabel('$t \, [s]$')
             ylabel('$T_m \, [Nm]$')
             obj.aTm.TickLabelInterpreter='latex';
-            xlim([obj.timeA-dx,obj.timeB+dx]);
+%             xlim([obj.timeA-dx,obj.timeB+dx]);
             lgd = legend('Location','northeastoutside');
             lgd.Visible = 'off';
             hold on

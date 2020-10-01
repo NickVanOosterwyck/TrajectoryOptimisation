@@ -19,8 +19,8 @@ ub = obj.input.ub;
 sTrajType = obj.input.sTrajType;
 
 switch sTrajType
-    case {'trap','poly5'}
-        error ('Only possible to plot optimisable trajectory.')
+    case {'trap','poly5','pause'}
+        error ('Only possible to plot trajectory.')
     case {'poly','cheb','chebU'}
         labX = '$p_6$';
         labY = '$p_7$';
@@ -30,6 +30,9 @@ switch sTrajType
     case 'custom'
         labX = '$x_1$';
         labY = '$x_2$';
+    otherwise
+        error(['Fitness function cannot be plotted for the selected '...
+            'trajectory type ''%s'''],obj.input.sTrajType);
 end
 
 switch DOF

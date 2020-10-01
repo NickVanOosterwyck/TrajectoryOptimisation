@@ -1,3 +1,4 @@
+% Comparison Optimised Trajectories Nedschroef
 %% init
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
@@ -85,5 +86,5 @@ fig.addPlot(spline5);
 %fig.removeWhitespace();
 
 %% plot objective functions
-%plotFitFun(cheb7)
-%plotFitFun(spline5)
+cheb7.plotFitFun();
+spline5.plotFitFun();
