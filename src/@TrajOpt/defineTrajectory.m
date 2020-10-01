@@ -212,8 +212,8 @@ traj.qd2=qd2;
 traj.breaks=breaks;
 
 traj.var.symVar=symVar;
-traj.var.constrVar=constrVar;
 traj.var.designVar=designVar;
+traj.var.constrVar=constrVar;
 traj.var.constrVar_sol=constrVar_sol;
 traj.var.constrEq=constrEq;
 

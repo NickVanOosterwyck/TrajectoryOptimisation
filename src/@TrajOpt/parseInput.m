@@ -112,7 +112,7 @@ switch inputC.sTrajType
         end
     case {'poly','cheb','chebU','spline','custom'}
         if input.DOF == 0
-            warning('The selected trajectory is not optimisable.')
+            warning('The selected trajectory has no DOF.')
         end
 end
 inputC.DOF = input.DOF;

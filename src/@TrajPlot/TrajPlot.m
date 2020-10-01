@@ -5,6 +5,8 @@ classdef TrajPlot < handle
     properties
         f       % main figure  handle
         aTr     % axes with trajectory
+        aSp     % axes with speed
+        aAc     % axes with acceleration
         aTm     % axes with driving torque
         timeA   % start time
         timeB   % end time
@@ -47,25 +49,43 @@ classdef TrajPlot < handle
                 0.3010, 0.7450, 0.9330;
                 0.6350, 0.0780, 0.1840];
             obj.colorMap = [colorsUA;colorsMatlab];
-            obj.aTr=subplot(2,1,1);
+            
+            obj.aTr=subplot(4,1,1);
             xlabel('$t \, [s]$')
-            ylabel('$\theta(t) \, [^{\circ}]$')
+            ylabel('$\theta \, [^{\circ}]$')
             dx=0.03*(obj.timeB-obj.timeA);
             dy=0.03*(posUB-posLB);
             xlim([obj.timeA-dx,obj.timeB+dx]);
             ylim([posLB-dy,posUB+dy])
             legend('Location','northeastoutside');
-            hold on
-            %plot([obj.timeA,obj.timeB],[obj.posA,obj.posB],'.k'...
-            %,'MarkerSize',15,'HandleVisibility','off')
             
-            obj.aTm=subplot(2,1,2);
+            obj.aSp=subplot(4,1,2);
             xlabel('$t \, [s]$')
-            ylabel('$T_m(t) \, [Nm]$')
+            ylabel('$\dot{\theta} \, [^{\circ}/s]$')
+            dx=0.03*(obj.timeB-obj.timeA);
+            %dy=0.03*(posUB-posLB);
+            xlim([obj.timeA-dx,obj.timeB+dx]);
+            %ylim([posLB-dy,posUB+dy])
+            lgd = legend('Location','northeastoutside');
+            lgd.Visible = 'off';
+            
+            obj.aAc=subplot(4,1,3);
+            xlabel('$t \, [s]$')
+            ylabel('$\ddot{\theta} \, [^{\circ}/s^2]$')
+            dx=0.03*(obj.timeB-obj.timeA);
+            %dy=0.03*(posUB-posLB);
+            xlim([obj.timeA-dx,obj.timeB+dx]);
+            %ylim([posLB-dy,posUB+dy])
+            lgd = legend('Location','northeastoutside');
+            lgd.Visible = 'off';
+            
+            obj.aTm=subplot(4,1,4);
+            xlabel('$t \, [s]$')
+            ylabel('$T_m \, [Nm]$')
             obj.aTm.TickLabelInterpreter='latex';
             xlim([obj.timeA-dx,obj.timeB+dx]);
-            lgdTm=legend('Location','northeastoutside','Visible','off');
-            lgdTm.Visible='off';
+            lgd = legend('Location','northeastoutside');
+            lgd.Visible = 'off';
             hold on
             yline(0,'k','LineWidth',0.1,'HandleVisibility','off');
         end

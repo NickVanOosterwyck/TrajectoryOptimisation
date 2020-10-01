@@ -8,7 +8,7 @@ clear input
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'trap';
 input.timeA = 0;
-input.timeB = 0.0738;
+input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 
@@ -19,13 +19,13 @@ input.d_Tl = 5;
 trap = TrajOpt(input);
 trap.optimizeTrajectory();
 
-%% poly0
+%% poly5
 clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'poly5';
 input.timeA = 0;
-input.timeB = 0.5;
+input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 
@@ -33,16 +33,16 @@ input.posB = 3.0299;
 input.d_J = 4;
 input.d_Tl = 5;
 
-poly0 = TrajOpt(input);
-poly0.optimizeTrajectory();
+poly5 = TrajOpt(input);
+poly5.optimizeTrajectory();
 
-%% cheb2
+%% cheb7
 clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'cheb';
 input.timeA = 0;
-input.timeB = 0.0738;
+input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 input.DOF = 2;
@@ -54,17 +54,16 @@ input.d_Tl = 5;
 input.isTimeResc = true;
 input.isPosResc = true;
 
-cheb2 = TrajOpt(input);
-cheb2.optimizeTrajectory();
+cheb7 = TrajOpt(input);
+cheb7.optimizeTrajectory();
 
-
-%% spline
+%% spline5
 clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'spline';
 input.timeA = 0;
-input.timeB = 0.0738;
+input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 input.DOF = 2;
@@ -74,18 +73,17 @@ input.sSolver = 'quasi-newton';
 input.d_J = 4;
 input.d_Tl = 5;
 
-spline2 = TrajOpt(input);
-spline2.optimizeTrajectory();
+spline5 = TrajOpt(input);
+spline5.optimizeTrajectory();
 
 %% plot solutions
 fig = TrajPlot(input);
 fig.addPlot(trap);
-fig.addPlot(poly0);
-fig.addPlot(cheb2);
-fig.addPlot(spline2);
+fig.addPlot(poly5);
+fig.addPlot(cheb7);
+fig.addPlot(spline5);
 %fig.removeWhitespace();
 
 %% plot objective functions
-plotFitFun(cheb2)
-plotFitFun(spline2)
-plotFitFun(poly)
+%plotFitFun(cheb7)
+%plotFitFun(spline5)
