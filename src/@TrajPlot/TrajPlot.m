@@ -17,7 +17,7 @@ classdef TrajPlot < handle
     end
     
     methods
-        function obj = TrajPlot(input)
+        function obj = TrajPlot()
             obj.f = figure('Name','Trajectory Optimization'...
                 ,'Renderer','painters');
 %             obj.timeA=input.timeA;
