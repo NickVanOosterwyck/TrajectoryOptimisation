@@ -143,46 +143,5 @@ obj.fit = fit;
 
 end
 
-function fv = sym2vec(f,p)
-%SYM2VEC converts a symbolic expression f with symbolic variables p into a
-%"vectorized" form fv which is compatible with the INTLAB toolbox. The order
-%in which 
-
-n=size(p,2);
-for i=1:n
-    if ~has(f,p(i))
-        error(['Symbolic function does not contain variable' char(p(i))])
-    end
-end
-
-% convert symbolic functions and variables
-pv = arrayfun(@char, p, 'uniform', false); %convert variables to cell
-fv = matlabFunction(f,'Vars',p,'Optimize',false);
-fv = func2str(fv);
-
-%remove variable enumeration at beginning
-ltot=sum(strlength(pv(1:end)));
-ltot=ltot+n-1;
-fv(3)='x';
-fv(4:3+ltot-1)= [];
-
-% replace variables with x(&)
-for i=1:n
-    lvar = strlength(pv(i));
-    id = strfind(fv,pv(i));
-    oc = size(id,2);
-    for k=1:oc
-        fv = [ fv(1:id(k)-1) 'x(' num2str(i) ')' fv(id(k)+lvar:end) ];
-        id=id+4-lvar;
-    end
-end
-
-eval(['fv = ' fv ';'])
-
-% vectorize (INTLAB function)
-%fv=funvec(fv,zeros(2,1));
- 
-end
-
 
 
