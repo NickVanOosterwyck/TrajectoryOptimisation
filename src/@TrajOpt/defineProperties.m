@@ -20,10 +20,10 @@ syms ph
 % load data
 fprintf('Reading of property data started. \n');
 if isempty(dataTl)
-    dataTl=xlsread(strcat(sMechanism,'.xlsx'),2);
+    dataTl=readmatrix(strcat(sMechanism,'.xlsx'),'Sheet',2);
 end
 if isempty(dataJ) && ~isJSym
-    dataJ=xlsread(strcat(sMechanism,'.xlsx'),4);
+    dataJ=readmatrix(strcat(sMechanism,'.xlsx'),'Sheet',4);
 end
 fprintf('Property data is imported. \n\n');
 
