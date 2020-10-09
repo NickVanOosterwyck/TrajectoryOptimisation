@@ -14,6 +14,8 @@ isTimeResc = obj.input.isTimeResc;
 isPosResc = obj.input.isPosResc;
 trapRatio = obj.input.trapRatio; % ratio t_acc/t_tot (trap)
 trajFun = obj.input.trajFun; % custom symbolic trajectory function
+time = obj.input.time; % time variable or time data (discrete)
+q_dis = obj.input.traj; % trajectory data (discret)
 
 %% define bounds
 % check for resaling and define bounds
@@ -60,7 +62,8 @@ switch sTrajType
         end
         % calculate derivatives
         qd1 = diff(q,x);
-        qd2 = diff(qd1,x);       
+        qd2 = diff(qd1,x);
+        t = x;
     case 'spline'
         % define symbolic variables
         p0i= sym('p%d0',[1 nPieces]).';
@@ -72,6 +75,7 @@ switch sTrajType
         % calculate derivatives
         qd1 = diff(q,x);
         qd2 = diff(qd1,x);
+        t = x;
     case 'trap'
         symVar = [];
         % create velocity function
@@ -95,15 +99,25 @@ switch sTrajType
         q(1) = q(1)+sol.C1;
         q(2) = q(2)+sol.C2;
         q(3) = q(3)+sol.C3;
+        t = x;
     case 'pause'
         symVar = [];
         q=sym(posLB);
         qd1=diff(q);
         qd2=diff(qd1);
+        t = x;
     case 'custom'
+        symVar = [];
         q=trajFun;
         qd1=diff(q);
         qd2=diff(qd1);
+        t = x;
+    case 'dis'
+        symVar = [];
+        q=q_dis;
+        qd1 = [eps; diff(q(:))./diff(time(:))];
+        qd2 = [eps; diff(qd1(:))./diff(time(:))];
+        t = time;
 end
 
 %% define breakpoints
@@ -215,6 +229,7 @@ traj.q=q;
 traj.qd1=qd1;
 traj.qd2=qd2;
 traj.breaks=breaks;
+traj.t=t;
 
 traj.var.symVar=symVar;
 traj.var.designVar=designVar;

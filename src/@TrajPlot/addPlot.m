@@ -12,7 +12,7 @@ if isempty(varargin)
         case {'spline'}
             label = strcat(sol(1).input.sTrajType,...
                 num2str(sol(1).input.nPieces));
-        case {'custom'}
+        case {'custom','dis'}
             label = strcat('traj',obj.iPlot);
     end
 else

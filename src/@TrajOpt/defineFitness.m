@@ -10,6 +10,7 @@ if isempty(obj.prop)
 end
 
 % Read problem
+sTrajType = obj.input.sTrajType;
 timeA = obj.input.timeA; % start time
 timeB = obj.input.timeB; % end time
 posA = obj.input.posA; % start position
@@ -31,10 +32,11 @@ Jd1 = obj.prop.Jd1;
 q = obj.traj.q;
 qd1 = obj.traj.qd1;
 qd2 = obj.traj.qd2;
+t = obj.traj.t;
 breaks = obj.traj.breaks;
 designVar = obj.traj.var.designVar;
 
-% check for resaling
+% check for rescaling
 if isTimeResc
     a=0.5*(timeB-timeA); % correction factor a
     lb_time=-1;
@@ -58,44 +60,63 @@ else
 end
 
 % define motor torque
-syms ph
 tic
-% write properties
-Tl=subs(Tl,ph,q);
-J=subs(J,ph,q);
-Jd1=subs(Jd1,ph,q);
-Tm=Tl+(J.*qd2/a^2/c)+(0.5*(Jd1/b).*(qd1/a/c).^2); % torque equation with scaling
-Tm=expand(Tm); % expand and simplify function for easier integration
+fprintf('Determing torque Tm started. \n');
+syms ph
+switch sTrajType
+    case 'dis'
+        % write properties
+        Tl=double(subs(Tl,ph,q));
+        J=double(subs(J,ph,q));
+        Jd1=double(subs(Jd1,ph,q));
+        Tm=Tl+(J.*qd2/a^2/c)+(0.5*(Jd1/b).*(qd1/a/c).^2);
+    otherwise
+        % write properties
+        Tl=subs(Tl,ph,q);
+        J=subs(J,ph,q);
+        Jd1=subs(Jd1,ph,q);
+        Tm=Tl+(J.*qd2/a^2/c)+(0.5*(Jd1/b).*(qd1/a/c).^2); % torque equation with scaling
+        Tm=expand(Tm); % expand and simplify function for easier integration
+end
+t_tor=toc;
+fprintf('Torque Tm determined in %f s. \r\n',t_tor);
 
 % define objective function
-syms x
 tic
-fprintf('Integration of objective function started. \n');
-if nPieces==1
-    fitFun=int(Tm^2,x,lb_time,ub_time);
-else
-    fitFun=sym(zeros(nPieces,1));
-    for i=1:nPieces
-        fitFun(i,1)=int(Tm(i).^2,x,breaks(i),breaks(i+1));
-    end
+fprintf('Integration of torque Tm started. \n');
+switch sTrajType
+    case 'dis'
+        fitFun = rms(Tm)^2;
+    otherwise
+        if nPieces==1
+            fitFun=int(Tm^2,t,lb_time,ub_time);
+        else
+            fitFun=sym(zeros(nPieces,1));
+            for i=1:nPieces
+                fitFun(i,1)=int(Tm(i).^2,t,breaks(i),breaks(i+1));
+            end
+        end
+        fitFun = 1/(ub_time-lb_time)*ones(1,nPieces)*fitFun; % to prevent NaN     
 end
-%fitFun = sqrt(1/(ub_time-lb_time)*ones(1,k)*objFun); % to prevent NaN
-fitFun = 1/(ub_time-lb_time)*ones(1,nPieces)*fitFun; % to prevent NaN
 t_int=toc;
-fprintf('Objective function integrated in %f s. \r\n',t_int);
+fprintf('Torque Tm integrated in %f s. \r\n',t_int);
 
 tic
 fprintf('Simplification of objective function started. \n');
-fitFun=expand(fitFun); % simplification of objective function
-t_sim=toc;
+switch sTrajType
+    case 'dis'
+        t_sim = 0;
+    otherwise
+        fitFun=expand(fitFun); % simplification of objective function
+        t_sim=toc;
+end
 fprintf('Objective function simplified in %f s. \r\n',t_sim);
 
 if isHornerNot
     fitFun=horner(fitFun);
 end
 
-
-%% create vectorized function handle
+% create vectorized function handle
 tic
 fprintf('Vectorization of objective function started. \n');
 if DOF>0
@@ -137,7 +158,7 @@ fit.Tm=Tm;
 fit.a=a;
 fit.b=b;
 fit.c=c;
-fit.times=[t_int,t_sim,t_vec];
+fit.times=[t_tor,t_int,t_sim,t_vec];
 
 obj.fit = fit;
 

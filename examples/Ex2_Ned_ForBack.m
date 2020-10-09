@@ -72,8 +72,8 @@ pause2 = TrajOpt(input);
 pause2.optimizeTrajectory()
 
 %% combine
-total  = [cheb7For pause1 cheb7Bac pause2];
+cheb7  = [cheb7For pause1 cheb7Bac pause2];
 
 %% plot
 fig = TrajPlot();
-fig.addPlot(total);
+fig.addPlot(cheb7);

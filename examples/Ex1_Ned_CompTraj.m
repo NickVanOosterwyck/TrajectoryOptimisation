@@ -3,6 +3,12 @@
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 
+%% Image Example
+%
+% <<surfpeaks.jpg>>
+%
+% <<Acceleratie_DCLink.png>>
+
 %% trap (1/3)
 clear input
 % required

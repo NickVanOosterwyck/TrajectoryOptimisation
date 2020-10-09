@@ -17,25 +17,25 @@ function [inputC] = parseInput(obj,input)
 % of the GNU license. See LICENSE file in repo for details.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%% sMechanism
+%% sMechanism
 % validate field
 if ~isfield(input, 'sMechanism')
     error('Field ''sMechanism'' cannot be ommitted from ''input''');
 end
 inputC.sMechanism = input.sMechanism;
 
-%%% sTrajType
+%% sTrajType
 % validate field
 if ~isfield(input, 'sTrajType')
     error('Field ''sTrajType'' cannot be ommitted from ''input''');
 else
     validTrajTypes = {'trap','poly5','pause','poly','cheb','chebU',...
-        'spline','custom'};
+        'spline','custom','dis'};
     validatestring(input.sTrajType,validTrajTypes);
 end
 inputC.sTrajType = input.sTrajType;
 
-%%% timeA
+%% timeA
 % validate field
 if ~isfield(input, 'timeA')
     error('Field ''timeA'' cannot be ommitted from ''input''');
@@ -45,7 +45,7 @@ else
 end
 inputC.timeA = input.timeA;
 
-%%% timeB
+%% timeB
 % validate field
 if ~isfield(input, 'timeB')
     error('Field ''timeB'' cannot be ommitted from ''input'''); 
@@ -60,7 +60,7 @@ if input.timeB < input.timeA
 end
 inputC.timeB = input.timeB;
 
-%%% posA
+%% posA
 % validate field
 if ~isfield(input, 'posA')
     error('Field ''posA'' cannot be ommitted from ''input''');
@@ -69,7 +69,7 @@ else
 end
 inputC.posA = input.posA;
 
-%%% posB
+%% posB
 % validate field
 if ~isfield(input, 'posB')
     error('Field ''posB'' cannot be ommitted from ''input''');
@@ -78,7 +78,7 @@ else
 end
 inputC.posB = input.posB;
 
-%%% sSolver
+%% sSolver
 % validate field
 if ~isfield(input, 'sSolver')
     input.sSolver = [];
@@ -96,7 +96,7 @@ switch inputC.sTrajType
 end
 inputC.sSolver = input.sSolver;
 
-%%% DOF
+%% DOF
 % validate field and assign default value if empty
 if ~isfield(input,'DOF')
     input.DOF = 0;
@@ -118,7 +118,7 @@ switch inputC.sTrajType
 end
 inputC.DOF = input.DOF;
 
-%%% isTimeResc
+%% isTimeResc
 if ~isfield(input, 'isTimeResc')
     input.isTimeResc = false;
 else
@@ -136,7 +136,7 @@ switch inputC.sTrajType
 end
 inputC.isTimeResc = input.isTimeResc;
 
-%%% isPosResc
+%% isPosResc
 if ~isfield(input, 'isPosResc')
     input.isPosResc = false;
 else
@@ -154,7 +154,7 @@ switch inputC.sTrajType
 end
 inputC.isPosResc = input.isPosResc;
 
-%%% trapRatio
+%% trapRatio
 % validate field and assign default value if empty
 if ~isfield(input,'trapRatio')
     switch inputC.sTrajType
@@ -177,7 +177,7 @@ switch inputC.sTrajType
 end
 inputC.trapRatio = input.trapRatio;
 
-%%% trajFun
+%% trajFun
 % validate field and assign default value if empty
 if ~isfield(input,'trajFun')
     input.trajFun = [];
@@ -196,7 +196,7 @@ switch inputC.sTrajType
 end
 inputC.trajFun = input.trajFun;
 
-%%% trajFunBreaks
+%% trajFunBreaks
 % validate field and assign default value if empty
 if ~isfield(input,'trajFunBreaks')
     input.trajFunBreaks = [];
@@ -215,7 +215,55 @@ switch inputC.sTrajType
 end
 inputC.trajFunBreaks = input.trajFunBreaks;
 
-%%% sInterp
+%% traj
+% validate field and assign default value if empty
+if ~isfield(input,'traj')
+    input.traj = [];
+else
+    if length(input.traj)>1 && ~isnumeric(input.traj)
+        error('Only 1-dimensional trajectory data is allowed.')
+    end
+end
+% extra checks
+switch inputC.sTrajType
+    case {'poly5','pause','trap','poly','cheb','chebU','spline'}
+        if ~isempty(input.traj)
+        error(['The selected trajectory type ''%s'' does not allow a',...
+            'field ''traj.'''],input.sTrajType)
+        end 
+    case {'dis'}
+        if isempty(input.traj)
+            error(['Field ''traj'' cannot be ommitted from ''input'''...
+                'for the selected trajectory type ''%s'''],input.sTrajType);
+        end  
+end
+inputC.traj = input.traj;
+
+%% time
+% validate field and assign default value if empty
+if ~isfield(input,'time')
+    input.time = [];
+else
+    if length(input.time)>1 && ~isnumeric(input.time)
+        error('Only 1-dimensional time data is allowed.')
+    end
+end
+% extra checks
+switch inputC.sTrajType
+    case {'poly5','pause','trap','poly','cheb','chebU','spline'}
+        if ~isempty(input.time)
+        error(['The selected trajectory type ''%s'' does not allow a',...
+            'field ''time.'''],input.sTrajType)
+        end 
+    case {'dis'}
+        if isempty(input.time)
+            error(['Field ''time'' cannot be ommitted from ''input'''...
+                'for the selected trajectory type ''%s'''],input.sTrajType);
+        end  
+end
+inputC.time = input.time;
+
+%% sInterp
 % check field
 if ~isfield(input, 'sInterp')
     input.sInterp = 'poly';
@@ -225,7 +273,7 @@ else
 end
 inputC.sInterp = input.sInterp;
 
-%%% d_J
+%% d_J
 % validate field and assign default value if empty
 if ~isfield(input,'d_J')
     input.d_J = [];
@@ -235,7 +283,7 @@ else
 end
 inputC.d_J = input.d_J;
 
-%%% d_Tl
+%% d_Tl
 % validate field and assign default value if empty
 if ~isfield(input,'d_Tl')
     input.d_Tl = [];
@@ -245,7 +293,7 @@ else
 end
 inputC.d_Tl = input.d_Tl;
 
-%%% isJSym
+%% isJSym
 if ~isfield(input, 'isJSym')
     input.isJSym = false;
 else
@@ -259,7 +307,7 @@ if input.isJSym && isempty(input.d_J)
 end
 inputC.isJSym = input.isJSym;
 
-%%% dataJ
+%% dataJ
 % validate field and assign default value if empty
 if ~isfield(input,'dataJ')
     input.dataJ = [];
@@ -267,7 +315,7 @@ else
 end
 inputC.dataJ = input.dataJ;
 
-%%% data_Tl
+%% data_Tl
 % validate field and assign default value if empty
 if ~isfield(input,'dataTl')
     input.dataTl = [];
@@ -275,7 +323,7 @@ else
 end
 inputC.dataTl = input.dataTl;
 
-%%% sFit
+%% sFit
 % validate field
 if ~isfield(input, 'sFit')
     input.sFit = 'Trms';
@@ -285,7 +333,7 @@ else
 end
 inputC.sFit = input.sFit;
 
-%%% sFitNot
+%% sFitNot
 % validate field
 if ~isfield(input, 'sFitNot')
     input.sFitNot = 'frac';
@@ -295,7 +343,7 @@ else
 end
 inputC.sFitNot = input.sFitNot;
 
-%%% digits
+%% digits
 % validate field and assign default value if empty
 if ~isfield(input,'digits')
     switch input.sFitNot
@@ -310,7 +358,7 @@ else
 end
 inputC.digits = input.digits;
 
-%%% isHornerNot
+%% isHornerNot
 if ~isfield(input, 'isHornerNot')
     input.isHornerNot = false;
 else
@@ -325,9 +373,9 @@ inputC.isHornerNot = input.isHornerNot;
 % assign dependent properties
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%% nPieces
+%% nPieces
 switch inputC.sTrajType
-    case {'poly5','pause','poly','cheb','chebU'}
+    case {'poly5','pause','poly','cheb','chebU','dis'}
         inputC.nPieces = 1;
     case {'trap'}
         inputC.nPieces = 3;
@@ -337,7 +385,7 @@ switch inputC.sTrajType
         inputC.nPieces = size(inputC.trajFun,1);
 end
 
-%%% lb
+%% lb
 % validate field and assign default value if empty
 if ~isfield(input,'lb')
     switch inputC.sTrajType
@@ -353,7 +401,7 @@ else
 end
 inputC.lb = input.lb;
 
-%%% ub
+%% ub
 % validate field and assign default value if empty
 if ~isfield(input,'ub')
     switch inputC.sTrajType
