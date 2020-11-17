@@ -15,7 +15,7 @@ input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
 % optional
-input.d_J = 7;
+input.d_J = 4;
 input.d_Tl = 5;
 input.isTimeResc = true;
 input.isPosResc = true;
@@ -28,7 +28,7 @@ cheb2.defineTrajectory();
 cheb2.defineProperties();
 cheb2.defineFitness();
 
-%% create fitnessfunction 
+%% create fitnessfunction
 fitFun = cheb2.fit.fitFun;
 digits = cheb2.input.digits;
 designVar = cheb2.traj.var.designVar;
@@ -64,10 +64,40 @@ fitFun_vec = vectorize(fitFun_vec);
 fitFun_vec = str2func(['@(x,a)' fitFun_vec]);
 t_vec=toc;
 
-% check
-a_J_sol = [0.0124380143;0.0000609762;-0.0175730484;0.0000630271;0.0088858238];
-sqrt(fitFun_vec([0;0],a_J_sol)) % must be 22.4736
-
 % save new vectorized function
 save([fileparts(matlab.desktop.editor.getActiveFilename) ...
- '\fitFun_vec.mat'],'fitFun_vec')
+    '\fitFun_vec.mat'],'fitFun_vec')
+
+%% check & plot
+% check
+a_J_sol = [0.012438014347721;6.097620376184698e-05;-0.017573048370808;6.302708402890077e-05;0.008885823771286];
+%a_J_sol = [0.012438014347721;-3.915888336773353e-05;-0.017573048370808;5.297875506136531e-04;0.008885823771286;-4.196018430545512e-04];
+%a_J_sol = [0.012445244055890;-3.915888336772541e-05;-0.017724698134493;5.297875506136194e-04;0.009340251136910;-4.196018430545183e-04;-3.328642814668063e-04];
+sqrt(fitFun_vec([0;0],a_J_sol)) % must be 22.4736
+
+%plot
+syms a0 a1 a2 a3 a4 a5 a6
+
+fitFun = cheb2.fit.fitFun;
+
+fitFun = subs(fitFun,a0,(a_J_sol(1)));
+fitFun = subs(fitFun,a1,(a_J_sol(2)));
+fitFun = subs(fitFun,a2,(a_J_sol(3)));
+fitFun = subs(fitFun,a3,(a_J_sol(4)));
+fitFun = subs(fitFun,a4,(a_J_sol(5)));
+%fitFun = subs(fitFun,a5,(a_J_sol(6)));
+%fitFun = subs(fitFun,a6,(a_J_sol(7)));
+
+figure
+h=fsurf(log10(fitFun),[-1,1],'ShowContours','on');
+h.EdgeColor = 'none';
+
+%% optimise
+fitFun2 = @(x)fitFun_vec(x,a_J_sol);
+
+X0=zeros(2,1);
+[p] = fminunc(fitFun2,X0);
+
+p6 = p(1)
+p7 = p(2)
+

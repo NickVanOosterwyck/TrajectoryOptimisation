@@ -17,7 +17,7 @@ input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
 % optional
-input.d_J = 4;
+input.d_J = 5;
 input.d_Tl = 5;
 input.isTimeResc = true;
 input.isPosResc = true;

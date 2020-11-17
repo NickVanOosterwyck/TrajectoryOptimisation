@@ -17,7 +17,7 @@ classdef TrajPlot < handle
     end
     
     methods
-        function obj = TrajPlot()
+        function obj = TrajPlot(varargin)
             obj.f = figure('Name','Trajectory Optimization'...
                 ,'Renderer','painters');
 %             obj.timeA=input.timeA;
@@ -27,6 +27,12 @@ classdef TrajPlot < handle
 %             
 %             posLB = min(obj.posA,obj.posB);
 %             posUB = max(obj.posA,obj.posB);
+
+            if isempty(varargin)
+                location = 'northwest';
+            else
+                location = varargin{1};
+            end
             
             % latex
             set(0,'DefaultTextInterpreter','latex');
@@ -57,7 +63,7 @@ classdef TrajPlot < handle
 %             dy=0.03*(posUB-posLB);
 %             xlim([obj.timeA-dx,obj.timeB+dx]);
 %             ylim([posLB-dy,posUB+dy])
-            legend('Location','northeastoutside');
+            legend('Location',location);
             
             obj.aSp=subplot(4,1,2);
             xlabel('$t \, [s]$')
@@ -66,7 +72,7 @@ classdef TrajPlot < handle
 %             dy=0.03*(posUB-posLB);
 %             xlim([obj.timeA-dx,obj.timeB+dx]);
 %             ylim([posLB-dy,posUB+dy])
-            lgd = legend('Location','northeastoutside');
+            lgd = legend('Location',location);
             lgd.Visible = 'off';
             
             obj.aAc=subplot(4,1,3);
@@ -76,7 +82,7 @@ classdef TrajPlot < handle
 %             dy=0.03*(posUB-posLB);
 %             xlim([obj.timeA-dx,obj.timeB+dx]);
 %             ylim([posLB-dy,posUB+dy])
-            lgd = legend('Location','northeastoutside');
+            lgd = legend('Location',location);
             lgd.Visible = 'off';
             
             obj.aTm=subplot(4,1,4);
@@ -84,7 +90,7 @@ classdef TrajPlot < handle
             ylabel('$T_m \, [Nm]$')
             obj.aTm.TickLabelInterpreter='latex';
 %             xlim([obj.timeA-dx,obj.timeB+dx]);
-            lgd = legend('Location','northeastoutside');
+            lgd = legend('Location',location);
             lgd.Visible = 'off';
             hold on
             yline(0,'k','LineWidth',0.1,'HandleVisibility','off');
