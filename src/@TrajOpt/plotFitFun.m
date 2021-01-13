@@ -5,15 +5,17 @@ function [] = plotFitFun(obj,varargin)
 % input parser
 p = inputParser;
 defScale = 'log';
+defBounds = [obj.input.lb obj.input.ub];
 p.addOptional('Scale',defScale,@ischar) %log or lin
+p.addOptional('Bounds',defBounds,@isnumeric)
 p.parse(varargin{:});
 Scale=p.Results.Scale;
+lb=p.Results.Bounds(1);
+ub=p.Results.Bounds(2);
 
 % read objective
 objFun = obj.fit.fitFun;
 DOF = obj.input.DOF;
-lb = obj.input.lb;
-ub = obj.input.ub;
 
 % read settings
 sTrajType = obj.input.sTrajType;
@@ -42,12 +44,12 @@ switch DOF
                 % plot log
                 figure('renderer','painters');
                 a = axes;
-                fplot(log10(objFun),[lb,ub]); % plot
+                fplot(log10objFun,[lb,ub]); % plot
                 
                 % axes
                 a.TickLabelInterpreter = 'latex';
                 xlabel(labX,'Interpreter','latex')
-                ylabel('$T_{rms}$','Interpreter','latex')
+                ylabel('${T_{rms}}^2$','Interpreter','latex')
             case 'lin'
                 % plot lin
                 figure('renderer','painters');
@@ -57,7 +59,7 @@ switch DOF
                 % axes
                 a.TickLabelInterpreter = 'latex';
                 xlabel(labX,'Interpreter','latex')
-                ylabel('$T_{rms}$','Interpreter','latex')
+                ylabel('${T_{rms}}^2$','Interpreter','latex')
         end
         
     case 2
@@ -77,7 +79,7 @@ switch DOF
                 a.TickLabelInterpreter = 'latex';
                 xlabel(labX,'Interpreter','latex')
                 ylabel(labY,'Interpreter','latex')
-                zlabel('$T_{rms}$','Interpreter','latex')
+                zlabel('${T_{rms}}^2$','Interpreter','latex')
                 
                 warning('zooming in/out with scrolling wheel will lead to wrong axes')
                 
@@ -94,7 +96,7 @@ switch DOF
                 a2.TickLabelInterpreter = 'latex';
                 xlabel(labX,'Interpreter','latex')
                 ylabel(labY,'Interpreter','latex')
-                zlabel('$T_{rms}$','Interpreter','latex')
+                zlabel('${T_{rms}}^2$','Interpreter','latex')
                 set(a2,'ColorScale','lin')
         end
         

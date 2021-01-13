@@ -5,15 +5,15 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 set(0,'DefaultTextInterpreter','latex');
 set(0,'DefaultLegendInterpreter','latex');
 set(0,'DefaultAxesTickLabelInterpreter','latex');
-% intlab
-cwd=cd(['C:\Program Files\MATLAB\R' ...
-    version('-release') '\toolbox\INTLAB\Intlab_V11']);
-startintlab;
-cd(cwd);
-format infsup %long e % change display of intervals
+% % intlab
+% cwd=cd(['C:\Program Files\MATLAB\R' ...
+%     version('-release') '\toolbox\INTLAB\Intlab_V11']);
+% startintlab;
+% cd(cwd);
+% format infsup %long e % change display of intervals
 
 %% input
-n = 4;
+n = 20;
 t0 = -1;
 tn = 1;
 thA = -1;
@@ -24,12 +24,7 @@ thB = 1;
 k = 1:n+1; % iterator
 ti = cos((2*k-1)/2/(n+1)*pi); % Chebyshev nodes
 ti = rescale(flip(ti),t0,tn);
-
-% thetai (symbolic)
-syms t0
-ti=sym('t', [1 n]);
-ti=[th0 ti];
-
+ti = linspace(t0,tn,n+1);
 hi = ti(2:end)-ti(1:end-1);
 
 % thetai (symbolic)
@@ -52,12 +47,6 @@ zi(n+1) = 0;
 syms th
 a_J = [0.012438014347721,6.097620376184698e-05,-0.017573048370808,...
     6.302708402890077e-05,0.008885823771286];
-%temp
-d=4;
-syms a0;
-a_J=sym('a', [1 d]);
-a_J=[a0 a_J];
-
 J = a_J*(th.^(0:4).');
 Jd1 = diff(J,th);
 
@@ -84,7 +73,7 @@ Cd2 = diff(Cd1,t);
 %% constraints (matrix)
 Aeq = zeros(n+1,2*n-2);
 
-for k=1:n-1 % may be sped up with 'diag' command
+for k=1:n-1
     i=k+1;
     % knot constraints
     a_th = [6/hi(i-1) -6*((1/hi(i))+(1/hi(i-1))) 6/hi(i)];
@@ -163,25 +152,25 @@ fitFun = ones(1,n)*fi;
 % coef_max = double(max(abs(coeffs(fitFun))));
 % coef_min = double(min(abs(coeffs(fitFun))));
 
-%% plot objective
-j = 1;
-sol = solve(Aeq*designVar==beq,designVar([1:j-1,j+1:end]));
-sol_array=struct2array(sol).';
-fitFun_plot = subs(fitFun,designVar([1:j-1,j+1:end]),sol_array);
-fitFun_plot = expand(fitFun_plot);
-figure
-fplot(log(fitFun_plot),[-1,1])
-xlabel(['$' char(designVar(j)) '$'])
-ylabel('$log(T_{rms})$')
-
-ax = gca; 
-outerpos = ax.OuterPosition; 
-ti = ax.TightInset;  
-left = outerpos(1) + ti(1); 
-bottom = outerpos(2) + ti(2); 
-ax_width = outerpos(3) - ti(1) - ti(3); 
-ax_height = outerpos(4) - ti(2) - ti(4); 
-ax.Position = [left bottom ax_width ax_height]; 
+% % plot objective
+% j = 1;
+% sol = solve(Aeq*designVar==beq,designVar([1:j-1,j+1:end]));
+% sol_array=struct2array(sol).';
+% fitFun_plot = subs(fitFun,designVar([1:j-1,j+1:end]),sol_array);
+% fitFun_plot = expand(fitFun_plot);
+% figure
+% fplot(log(fitFun_plot),[-1,1])
+% xlabel(['$' char(designVar(j)) '$'])
+% ylabel('$log(T_{rms})$')
+% 
+% ax = gca; 
+% outerpos = ax.OuterPosition; 
+% tins = ax.TightInset;  
+% left = outerpos(1) + tins(1); 
+% bottom = outerpos(2) + tins(2); 
+% ax_width = outerpos(3) - tins(1) - tins(3); 
+% ax_height = outerpos(4) - tins(2) - tins(4); 
+% ax.Position = [left bottom ax_width ax_height]; 
 
 %% create vectorized fitness function
 tic
@@ -201,27 +190,29 @@ fitFun_vec = str2func(['@(x)' fitFun_vec]);
 t_vec=toc;
 fprintf('Objective function vectorized in %f s. \n\n',t_vec);
 
-%% create vectorized constraints
-tic
-fprintf('Vectorization of constraints started. \n');
-
-designVar = [thi(2:end-1),zi(2:end-1)].';
-d = n*2-2; % # design var
-
-con_vec = char(Aeq*designVar-beq);
-old = arrayfun(@char, designVar, 'uniform', false); %sym2cell
-new=cell(d,1);
-for i=1:d
-    new(i,1) = cellstr(['x(' num2str(i) ',:)']);
-end
-con_vec = replace(con_vec,old,new);
-con_vec = vectorize(con_vec);
-con_vec = str2func(['@(x)' con_vec]);
-t_vec=toc;
-fprintf('Constraints vectorized in %f s. \n\n',t_vec);
+%% create vectorized constraints (intlab)
+% tic
+% fprintf('Vectorization of constraints started. \n');
+% 
+% designVar = [thi(2:end-1),zi(2:end-1)].';
+% d = n*2-2; % # design var
+% 
+% con_vec = char(Aeq*designVar-beq);
+% old = arrayfun(@char, designVar, 'uniform', false); %sym2cell
+% new=cell(n*2-2,1);
+% for i=1:n*2-2
+%     new(i,1) = cellstr(['x(' num2str(i) ',:)']);
+% end
+% con_vec = replace(con_vec,old,new);
+% con_vec = vectorize(con_vec);
+% con_vec = str2func(['@(x)' con_vec]);
+% t_vec=toc;
+% fprintf('Constraints vectorized in %f s. \n',t_vec);
 
 %% optimise fmincon
-X0=zeros(d,1);
+X0_th = thA + (thB-thA)/(tn-t0).*(ti(2:n)-t0).';
+X0_a = zeros(n-1,1);
+X0 = [X0_th;X0_a];
 A = [];
 b = [];
 lb = [];
@@ -231,36 +222,39 @@ options = optimoptions(@fmincon,'Display','none');
 
 % optimize
 tic
+fprintf(['Optimization of objective function with %d DOF ' ...
+            'started with %s...\n'],n-3,'interior-point');
 [X,fit_min,exitflag,output] = fmincon(fitFun_vec,X0,A,b,...
     Aeq,beq,lb,ub,nonlcon,options);
 t_sol = toc;
+fprintf('Solution found in %4.2f s\n',t_sol);
 
 designVar_sol=X';
 
 %% optimise intlab
-X0_th = infsup(-1,1)*ones(n-1,1);
-X0_z = infsup(-10,10)*ones(n-1,1);
-X0 = [X0_th;X0_z];
-opt = verifyoptimset('NIT',1,'TolFun',0.001);
-
-% solve
-it=1;
-fprintf(['Iteration: %d   Boxes left:%d    Time '...
-    'elapsed: %4.2f s\n'],it,Inf,0)
-tic
-[ mu , X , XS , Data ] = verifyconstraintglobalmin(fitFun_vec,con_vec,X0,opt);
-XS = collectList(XS);
-while ~isempty(XS)
-    it=it+1;
-    fprintf(['Iteration: %d   Boxes left:%d    Time '...
-        'elapsed: %4.2f s\n'],it,size(XS,2),toc)
-    [ mu , X , XS , Data] = verifyglobalmin(Data,opt);
-    XS = collectList(XS);
-end
-t_sol=toc;
-
-% extract solution
-designVar_sol=mid(X)';
+% X0_th = infsup(-1,1)*ones(n-1,1);
+% X0_z = infsup(-10,10)*ones(n-1,1);
+% X0 = [X0_th;X0_z];
+% opt = verifyoptimset('NIT',1,'TolFun',0.001);
+% 
+% % solve
+% it=1;
+% fprintf(['Iteration: %d   Boxes left:%d    Time '...
+%     'elapsed: %4.2f s\n'],it,Inf,0)
+% tic
+% [ mu , X , XS , Data ] = verifyconstraintglobalmin(fitFun_vec,con_vec,X0,opt);
+% XS = collectList(XS);
+% while ~isempty(XS)
+%     it=it+1;
+%     fprintf(['Iteration: %d   Boxes left:%d    Time '...
+%         'elapsed: %4.2f s\n'],it,size(XS,2),toc)
+%     [ mu , X , XS , Data] = verifyglobalmin(Data,opt);
+%     XS = collectList(XS);
+% end
+% t_sol=toc;
+% 
+% % extract solution
+% designVar_sol=mid(X)';
 
 %% plot
 % substitute solution

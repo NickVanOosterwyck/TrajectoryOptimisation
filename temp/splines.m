@@ -14,7 +14,7 @@ format infsup %long e % change display of intervals
 
 %% input
 % breakpoints
-n = 4;
+n = 20;
 t0 = -1;
 tn = 1';
 ti = linspace(t0,tn,n+1);

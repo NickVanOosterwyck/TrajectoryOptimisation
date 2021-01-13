@@ -114,10 +114,14 @@ switch sTrajType
         t = x;
     case 'dis'
         symVar = [];
-        q=q_dis;
-        qd1 = [eps; diff(q(:))./diff(time(:))];
-        qd2 = [eps; diff(qd1(:))./diff(time(:))];
-        t = time;
+        % select data within time bounds
+        q=q_dis(timeLB<=time(:,1) & time(:,1)<=timeUB);
+        t=time(timeLB<=time(:,1) & time(:,1)<=timeUB);
+        %q=q_dis;
+        %t=time;
+        % derivate
+        qd1 = [eps; diff(q(:))./diff(t(:))];
+        qd2 = [eps; diff(qd1(:))./diff(t(:))];
 end
 
 %% define breakpoints

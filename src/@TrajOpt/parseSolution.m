@@ -34,17 +34,18 @@ switch sTrajType
         qd1_C = qd1;
         qd2_C = qd2;
         breaks_C = breaks;
+        t_C = time;
     otherwise
         % fill in trajectory with solution
         q=subs(q,designVar.',designVar_sol);
         
+        syms t
         % rescale q horizontally
-        syms x t 
         if isTimeResc
-            q_C=subs(q,x,((2*t)-(timeB+timeA))/(timeB-timeA));
+            q_C=subs(q,time,((2*t)-(timeB+timeA))/(timeB-timeA));
             breaks_C = rescale(breaks,timeA,timeB);
         elseif ~isTimeResc
-            q_C=subs(q,x,t);
+            q_C=subs(q,time,t);
             breaks_C = breaks;
         end
         
@@ -55,6 +56,7 @@ switch sTrajType
         
         qd1_C = diff(q_C,t);
         qd2_C = diff(qd1_C,t);
+        t_C = t;
 end
 
 % rescale properties horizontally
@@ -112,12 +114,12 @@ end
 % evaluate discrete
 switch sTrajType
     case 'dis'
-        t_dis = time;
+        t_dis = t_C;
         q_dis = q_C;
         qd1_dis = qd1_C;
         qd2_dis = qd2_C;
         Tm_dis = Tm_C;
-        ts = time(2)-time(1);
+        ts = t_C(2)-t_C(1);
     otherwise
         ts = 0.00025;
         t_dis = double(breaks_C(1):ts:breaks_C(end));
@@ -164,6 +166,7 @@ end
 res.q = q_C;
 res.qd1 = qd1_C;
 res.qd2 = qd2_C;
+res.t = t_C;
 res.breaks = breaks_C;
 res.Tm = Tm_C;
 %res.J = J_C;
