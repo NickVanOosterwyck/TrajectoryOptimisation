@@ -82,7 +82,7 @@ clear input
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'dis';
 input.timeA = 0;
-input.timeB = 0.1;
+input.timeB = 0.3;
 input.posA = 0;
 input.posB = 3.0299;
 input.time = poly17GA_data(:,1);
