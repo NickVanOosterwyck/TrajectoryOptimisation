@@ -5,15 +5,10 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 set(0,'DefaultTextInterpreter','latex');
 set(0,'DefaultLegendInterpreter','latex');
 set(0,'DefaultAxesTickLabelInterpreter','latex');
-% % intlab
-% cwd=cd(['C:\Program Files\MATLAB\R' ...
-%     version('-release') '\toolbox\INTLAB\Intlab_V11']);
-% startintlab;
-% cd(cwd);
-% format infsup %long e % change display of intervals
+% loadIntlab
 
 %% input
-n = 20;
+n = 5;
 t0 = -1;
 tn = 1;
 thA = -1;
@@ -21,9 +16,9 @@ thB = 1;
 
 %%
 % ti & hi
-k = 1:n+1; % iterator
-ti = cos((2*k-1)/2/(n+1)*pi); % Chebyshev nodes
-ti = rescale(flip(ti),t0,tn);
+% k = 1:n+1; % iterator
+% ti = cos((2*k-1)/2/(n+1)*pi); % Chebyshev nodes
+% ti = rescale(flip(ti),t0,tn);
 ti = linspace(t0,tn,n+1);
 hi = ti(2:end)-ti(1:end-1);
 
@@ -123,7 +118,7 @@ fi=sym(zeros(n,1));
 for k=0:n-1
     i=k+1;
     tic
-    fi(i) = int(Tm(i).^2,t,ti(i),ti(i+1));
+    fi(i) = 1/(ti(i+1)-ti(i))*(int(Tm(i).^2,t,ti(i),ti(i+1)));
     t_int(i) = toc;
 end
 msg =  ['Torque Tm integrated in: [', repmat('%g, ', 1, numel(t_int)-1), '%g] s\n'];

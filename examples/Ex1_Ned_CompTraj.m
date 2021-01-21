@@ -124,7 +124,7 @@ spline5.optimizeTrajectory();
 fig = TrajPlot();
 fig.addPlot(trap13);
 fig.addPlot(poly5);
-fig.addPlot(cheb7);
+%fig.addPlot(cheb7);
 fig.addPlot(cheb9);
 fig.addPlot(poly17GA,'poly17GA');
 %fig.addPlot(spline5);
