@@ -86,11 +86,6 @@ for j = 1:length(sol)
                         ,'DisplayName',num2str(label),...
                         'HandleVisibility','off');
                 end
-                % plot start and endpoint
-                br_q1=subs(qd1(1),t,breaks(1));
-                br_q2=subs(qd1(end),t,breaks(end));
-                plot([breaks(1) breaks(end)],[br_q1 br_q2],'.k'...
-                    ,'MarkerSize',14,'HandleVisibility','off');
         end
     end
 end
@@ -123,11 +118,6 @@ for j = 1:length(sol)
                         ,'DisplayName',num2str(label),...
                         'HandleVisibility','off');
                 end
-                % plot start and endpoint
-                br_q1=subs(qd2(1),t,breaks(1));
-                br_q2=subs(qd2(end),t,breaks(end));
-                plot([breaks(1) breaks(end)],[br_q1 br_q2],'.k'...
-                    ,'MarkerSize',14,'HandleVisibility','off');
         end
     end
 end
@@ -160,29 +150,22 @@ for j = 1:length(sol)
                         ,'DisplayName',num2str(label),...
                         'HandleVisibility','off');
                 end
-                % plot start and endpoint
-                br_q1=subs(Tm(1),t,breaks(1));
-                br_q2=subs(Tm(end),t,breaks(end));
-                plot([breaks(1) breaks(end)],[br_q1 br_q2],'.k'...
-                    ,'MarkerSize',14,'HandleVisibility','off');
         end
     end
 end
 
 % set axis
-if j>1
-    axes(obj.aTr)
-    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
-    
-    axes(obj.aSp)
-    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
-    
-    axes(obj.aAc)
-    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
-    
-    axes(obj.aTm)
-    xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
-end
+axes(obj.aTr)
+xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
+
+axes(obj.aSp)
+xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
+
+axes(obj.aAc)
+xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
+
+axes(obj.aTm)
+xlim([sol(1).res.breaks(1) sol(end).res.breaks(end)]);
 
 
 end

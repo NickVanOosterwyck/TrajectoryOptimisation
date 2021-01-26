@@ -129,4 +129,4 @@ fig.addPlot(cheb9);
 fig.addPlot(poly17GA,'poly17GA');
 %fig.addPlot(spline5);
 fig.addRpmAxis();
-%fig.removeWhitespace();
+fig.removeWhitespace(); % repeat after rescale

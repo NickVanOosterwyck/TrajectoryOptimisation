@@ -1,7 +1,12 @@
 function [] = addRpmAxis(obj)
-limits = obj.aSp.Ylim;
+axes(obj.aSp)
+yyaxis left
+limits = obj.aSp.YLim;
+axes(obj.aSp)
 yyaxis right
-YLim(limits./360.*60) %/s -> rpm
+ylim(limits./360.*60) %/s -> rpm
+ylabel('$\dot{\theta} \, [rpm]$')
+set(gca,'YColor','k');
 
 end
 

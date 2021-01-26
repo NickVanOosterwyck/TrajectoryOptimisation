@@ -94,9 +94,7 @@ classdef TrajPlot < handle
             lgd.Visible = 'off';
             hold on
             yline(0,'k','LineWidth',0.1,'HandleVisibility','off');
-        end
-        
-        
+        end  
     end
 end
 
