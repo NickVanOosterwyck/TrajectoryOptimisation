@@ -23,8 +23,41 @@ input.isTimeResc = true;
 input.isPosResc = true;
 
 cheb7 = TrajOpt(input);
+cheb7.defineFitness();
 
-%% create dummy fitFun
+mpol p6 p7
+fitFun_char = ['fitFun = ' char(cheb7.fit.fitFun)];
+eval(fitFun_char)
+
+%% gloptipoly3
+loadSedumi;
+
+% mpol x1 x2
+% fitFun = 4*x1^2+x1*x2-4*x2^2-2.1*x1^4+4*x2^4+x1^6/3;
+
+P = msdp(min(fitFun));
+[status,obj] = msol(P);
+
+%%
+% mpol x1 x2
+% nVar = 2;
+% nMon = 2;
+% cell{nvar,1}
+% var = {x1,x2};
+% pow = [2 1; 0 3];
+% coef = [3; 5];
+% 
+% pow = num2cell(pow);
+% coef = num2cell(coef);
+% 
+% sfit.var = var;
+% sfit.pow = pow;
+% sfit.coef = coef;
+% 
+% fitFun2 = mpol(sfit)
+
+
+%% gloptipoly2
 % syms x1 x2
 % fitFun = 4*x1^2+x1*x2-4*x2^2-2.1*x1^4+4*x2^4+x1^6/3;
 % P = defipoly(['min' char(fitFun)],'x1,x2') % problem with symbolic toolbox
@@ -54,26 +87,4 @@ P{5}.c = [0 -1]; P{5}.t = '<=';
 P{6}.c = [-3 1]; P{6}.t = '<=';
 gloptipoly(P);
 
-
-mpol x1 x2
-fitFun = 4*x1^2+x1*x2-4*x2^2-2.1*x1^4+4*x2^4+x1^6/3;
-P = msdp(min(fitFun));
-[status,obj] = msol(P);
-
-mpol x1 x2
-nVar = 2;
-nMon = 2;
-cell{nvar,1}
-var = {x1,x2};
-pow = [2 1; 0 3];
-coef = [3; 5];
-
-pow = num2cell(pow);
-coef = num2cell(coef);
-
-sfit.var = var;
-sfit.pow = pow;
-sfit.coef = coef;
-
-fitFun2 = mpol(sfit)
 

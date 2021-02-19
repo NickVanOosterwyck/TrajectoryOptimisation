@@ -38,7 +38,7 @@ designVar = obj.traj.var.designVar;
 
 % check for rescaling
 if isTimeResc
-    a=0.5*(timeB-timeA); % correction factor a
+    a=0.5*(timeB-timeA); % correction factor = C4
     lb_time=-1;
     ub_time=1;
 else
@@ -48,14 +48,10 @@ else
 end
 
 if isPosResc
-    b=0.5*(posB-posA); % correction factor b
+    b=0.5*(posB-posA); % correction factor b = C3
+    c=2/(posB-posA); % correction factor c = C1
 else
     b=1;
-end
-
-if isPosResc
-    c=2/(posB-posA); % correction factor c
-else
     c=1;
 end
 

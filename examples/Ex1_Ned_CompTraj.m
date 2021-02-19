@@ -33,7 +33,7 @@ input.isTimeResc = true;
 input.isPosResc = true;
 
 % optional
-input.d_J = 6;
+input.d_J = 4;
 input.d_Tl = 5;
 
 poly5 = TrajOpt(input);

@@ -97,5 +97,5 @@ poly17GA.optimizeTrajectory();
 
 %% plot
 fig = TrajPlot('northeast');
-%fig.addPlot(cheb9);
+fig.addPlot(cheb9);
 fig.addPlot(poly17GA,'poly17GA');

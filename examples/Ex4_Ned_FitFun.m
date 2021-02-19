@@ -25,23 +25,23 @@ cheb7 = TrajOpt(input);
 cheb7.optimizeTrajectory();
 
 %% spline5
-clear input
+% clear input
 % required
-input.sMechanism = 'Nedschroef';
-input.sTrajType = 'spline';
-input.timeA = 0;
-input.timeB = 0.07375;
-input.posA = 0;
-input.posB = 3.0299;
-input.DOF = 2;
-input.sSolver = 'quasi-newton';
-
+% input.sMechanism = 'Nedschroef';
+% input.sTrajType = 'spline';
+% input.timeA = 0;
+% input.timeB = 0.07375;
+% input.posA = 0;
+% input.posB = 3.0299;
+% input.DOF = 2;
+% input.sSolver = 'quasi-newton';
+% 
 % optional
-input.d_J = 4;
-input.d_Tl = 5;
-
-spline5 = TrajOpt(input);
-spline5.optimizeTrajectory();
+% input.d_J = 4;
+% input.d_Tl = 5;
+% 
+% spline5 = TrajOpt(input);
+% spline5.optimizeTrajectory();
 
 %% full plot objective functions (log)
 cheb7.plotFitFun();

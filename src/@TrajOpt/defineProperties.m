@@ -50,16 +50,16 @@ end
 if isempty(d_Tl)
     d_Tl=0;
     while 1
-        [a_Tl,S]=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
+        [a_Tl,S_Tl]=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
         %R2_Tl=1 - (S.normr/norm(dataTl(:,2) - mean(dataTl(:,2))))^2;
-        L2_Tl=S.normr;
+        L2_Tl=S_Tl.normr;
         if L2_Tl < 0.01
             break
         end
         d_Tl=d_Tl+1;
     end
 else
-    a_Tl=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
+    [a_Tl,S_Tl]=polyfit(dataTl(:,1),dataTl(:,2),d_Tl);
 end
 Tl=poly2sym(a_Tl,ph);
 a_Tl=fliplr(a_Tl);
@@ -76,9 +76,9 @@ else
     if isempty(d_J)
         d_J=0;
         while 1
-            [a_J,S]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
+            [a_J,S_J]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
             %R2_J=1 - (S.normr/norm(dataJ(:,2) - mean(dataJ(:,2))))^2;
-            L2_J=S.normr;
+            L2_J=S_J.normr;
             if L2_J < 0.001
                 break
             end
@@ -86,7 +86,7 @@ else
         end
         
     else
-        a_J=polyfit(dataJ(:,1),dataJ(:,2),d_J);
+        [a_Tl,S_J]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
     end
     J=poly2sym(a_J,ph);
     a_J=fliplr(a_J);
@@ -106,6 +106,8 @@ prop.a_Tl=a_Tl;
 prop.a_J=a_J;
 prop.Tl_dis=Tl_dis;
 prop.J_dis=J_dis;
+prop.L2_J=S_J.normr;
+prop.L2_Tl=S_Tl.normr;
 
 obj.prop = prop;
 

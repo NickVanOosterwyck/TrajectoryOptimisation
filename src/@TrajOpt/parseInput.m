@@ -78,6 +78,24 @@ else
 end
 inputC.posB = input.posB;
 
+%% speedA
+% validate field
+if ~isfield(input,'speedA')
+    input.speedA = 0;
+else
+    mustBeNumeric(input.speedA)
+end
+inputC.speedA = input.speedA;
+
+%% speedB
+% validate field
+if ~isfield(input,'speedB')
+    input.speedB = 0;
+else
+    mustBeNumeric(input.speedB)
+end
+inputC.speedB = input.speedB;
+
 %% sSolver
 % validate field
 if ~isfield(input, 'sSolver')
@@ -88,7 +106,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly','cheb','chebU','spline','custom'}
+    case {'poly','cheb','chebU','spline'}
         if isempty(input.sSolver)
             error(['Field ''sSolver'' cannot be ommitted from ''input'''...
                 'for the selected trajectory type ''%s'''],input.sTrajType);
@@ -106,12 +124,12 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'trap','poly5','pause'}
+    case {'trap','poly5','pause','custom'}
         if input.DOF ~= 0
             error(['The selected trajectory',...
                 'type does not allow any DOF.'])
         end
-    case {'poly','cheb','chebU','spline','custom'}
+    case {'poly','cheb','chebU','spline'}
         if input.DOF == 0
             warning('The selected trajectory has no DOF.')
         end

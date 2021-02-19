@@ -7,6 +7,8 @@ timeA = obj.input.timeA; % start time
 timeB = obj.input.timeB; % end time
 posA = obj.input.posA; % start position
 posB = obj.input.posB; % end position
+speedA = obj.input.speedA; % start speed
+speedB = obj.input.speedB; % end speed
 sTrajType = obj.input.sTrajType; % trajectory type
 DOF = obj.input.DOF; % degree of freedom
 nPieces = obj.input.nPieces; % #intervals
@@ -14,6 +16,7 @@ isTimeResc = obj.input.isTimeResc;
 isPosResc = obj.input.isPosResc;
 trapRatio = obj.input.trapRatio; % ratio t_acc/t_tot (trap)
 trajFun = obj.input.trajFun; % custom symbolic trajectory function
+trajFunBreaks = obj.input.trajFunBreaks;
 time = obj.input.time; % time variable or time data (discrete)
 q_dis = obj.input.traj; % trajectory data (discret)
 
@@ -22,18 +25,27 @@ q_dis = obj.input.traj; % trajectory data (discret)
 if isTimeResc
     timeLB=-1;
     timeUB=1;
+    a=0.5*(timeB-timeA);
 else
-    timeLB=timeA;
+    timeLB=timeA; % correction factor = C4
     timeUB=timeB;
+    a=1;
 end
 
 if isPosResc
     posLB=-1;
     posUB=1;
+    %b=0.5*(posB-posA); % correction factor b = C3
+    c=2/(posB-posA); % correction factor c = C1
 else
     posLB=posA;
     posUB=posB;
+    %b=1;
+    c=1;
 end
+
+speedLB = speedA*a*c;
+speedUB = speedB*a*c;
 
 %% define position function
 syms x % time variable
@@ -157,10 +169,10 @@ switch sTrajType
     case {'poly','poly5','cheb','chebU','spline'}
         constrEq_bnd = sym.empty(6,0);
         constrEq_bnd(1,1) = subs(q(1),x,timeLB)==posLB;
-        constrEq_bnd(2,1) = subs(qd1(1),x,timeLB)==0;
+        constrEq_bnd(2,1) = subs(qd1(1),x,timeLB)==speedLB;
         constrEq_bnd(3,1) = subs(qd2(1),x,timeLB)==0;
         constrEq_bnd(4,1) = subs(q(end),x,timeUB)==posUB;
-        constrEq_bnd(5,1) = subs(qd1(end),x,timeUB)==0;
+        constrEq_bnd(5,1) = subs(qd1(end),x,timeUB)==speedUB;
         constrEq_bnd(6,1) = subs(qd2(end),x,timeUB)==0;
     otherwise
         constrEq_bnd =[];
