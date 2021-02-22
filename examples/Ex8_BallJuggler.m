@@ -2,6 +2,24 @@
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 
+%% cvel
+clear input
+% required
+input.sMechanism = 'BallJuggler';
+input.sTrajType = 'cvel';
+input.timeA = 0;
+input.timeB = 0.14;
+input.posA = 0;
+input.posB = 90/180*pi;
+input.speedB = 1080/180*pi;
+
+% optional
+input.d_J = 4;
+input.d_Tl = 4;
+
+cvel = TrajOpt(input);
+cvel.optimizeTrajectory();
+
 %% poly5
 clear input
 % required
@@ -10,7 +28,7 @@ input.sTrajType = 'poly5';
 input.timeA = 0;
 input.timeB = 0.14;
 input.posA = 0;
-input.posB = 90/180*pi;
+input.posB = 105.5/180*pi;
 input.speedB = 1080/180*pi;
 
 % optional
@@ -30,7 +48,7 @@ input.sTrajType = 'cheb';
 input.timeA = 0;
 input.timeB = 0.14;
 input.posA = 0;
-input.posB = 90/180*pi;
+input.posB = 105.5/180*pi;
 input.speedB = 1080/180*pi;
 input.DOF = 2;
 input.sSolver = 'quasi-newton';
@@ -44,52 +62,37 @@ input.isPosResc = true;
 cheb7 = TrajOpt(input);
 cheb7.optimizeTrajectory();
 
+fig = TrajPlot();
+fig.addPlot(cheb7);
+
 %% cheb9
-clear input
-% required
-input.sMechanism = 'BallJuggler';
-input.sTrajType = 'cheb';
-input.timeA = 0;
-input.timeB = 0.14;
-input.posA = 0;
-input.posB = 90/180*pi;
-input.speedB = 1080/180*pi;
-input.DOF = 4;
-input.sSolver = 'quasi-newton';
-
-% optional
-input.d_J = 4;
-input.d_Tl = 4;
-input.isTimeResc = true;
-input.isPosResc = true;
-
-cheb7 = TrajOpt(input);
-cheb7.optimizeTrajectory();
-
-%% trap
-clear input
-% required
-input.sMechanism = 'BallJuggler';
-input.sTrajType = 'trap';
-input.timeA = 0;
-input.timeB = 0.5;
-input.posA = 0;
-input.posB = 90/180*pi;
-input.speedB = 705/180*pi;
-
-% optional
-input.d_J = 4;
-input.d_Tl = 4;
-
-trap = TrajOpt(input);
-trap.optimizeTrajectory();
+% clear input
+% % required
+% input.sMechanism = 'BallJuggler';
+% input.sTrajType = 'cheb';
+% input.timeA = 0;
+% input.timeB = 0.14;
+% input.posA = 0;
+% input.posB = 90/180*pi;
+% input.speedB = 1080/180*pi;
+% input.DOF = 4;
+% input.sSolver = 'quasi-newton';
+% 
+% % optional
+% input.d_J = 4;
+% input.d_Tl = 4;
+% input.isTimeResc = true;
+% input.isPosResc = true;
+% 
+% cheb7 = TrajOpt(input);
+% cheb7.optimizeTrajectory();
 
 %% plot solutions
 fig = TrajPlot();
+fig.addPlot(cvel);
 fig.addPlot(poly5);
 fig.addPlot(cheb7);
-fig.addPlot(cheb9);
-%fig.addPlot(trap);
+%fig.addPlot(cheb9);
 %fig.addRpmAxis();
 
 %% Convergence analysis

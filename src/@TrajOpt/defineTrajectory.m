@@ -90,13 +90,22 @@ switch sTrajType
         t = x;
     case 'trap'
         symVar = [];
-        % create velocity function
+        % set ratios and max speed
         dt = timeUB-timeLB;
-        qd1_max = (posUB-posLB)/(dt-(trapRatio*dt));
+        if speedLB == 0 && speedUB == 0
+            trapRatioAcc = trapRatio;
+            trapRatioDec = trapRatio;
+            qd1_max = (posUB-posLB)/(dt-(0.5*trapRatioAcc*dt)...
+                -(0.5*trapRatioDec*dt));
+        else
+            error(['trap motion profile with' ...
+            'non-zero start/end speed not yet supported'])
+        end
+        % create velocity function
         qd1 = sym.empty(3,0);
-        qd1(1) = qd1_max/(trapRatio*dt)*(x-timeLB);
+        qd1(1) = qd1_max/(trapRatioAcc*dt)*(x-timeLB);
         qd1(2) = qd1_max;
-        qd1(3) = -qd1_max/(trapRatio*dt)*(x-timeUB);
+        qd1(3) = -qd1_max/(trapRatioDec*dt)*(x-timeUB);
         % calculate derivative
         qd2 = diff(qd1,x);
         % solve system
@@ -105,12 +114,34 @@ switch sTrajType
         eq = sym.empty(3,0);
         eq(1) = subs(q(1),x,timeLB)+C1 == posLB;
         eq(2) = subs(q(2),x,dt/2+timeLB)+C2 == ...
-            abs(posUB-posLB)/2+min(posUB,posLB);
+            abs(posUB-posLB)/2+min(posUB,posLB); % only if r_acc = r_dec
         eq(3) = subs(q(3),x,timeUB)+C3 == posUB;
         sol = solve(eq,[C1 C2 C3]);
         q(1) = q(1)+sol.C1;
         q(2) = q(2)+sol.C2;
         q(3) = q(3)+sol.C3;
+        t = x;
+    case 'cvel'
+        symVar = [];
+        % set ratios and max speed
+        dt = timeUB-timeLB;
+        trapRatioAcc = ((posUB-posLB)-(speedLB*dt)-(speedUB*dt))/...
+            (-(0.5*speedLB*dt)-(0.5*speedUB*dt));
+        % create velocity function
+        qd1 = sym.empty(2,0);
+        qd1(1) = (speedUB-speedLB)/(trapRatioAcc*dt)*(x-timeLB);
+        qd1(2) = speedUB;
+        % calculate derivative
+        qd2 = diff(qd1,x);
+        % solve system
+        syms C1 C2
+        q = int(qd1,x);
+        eq = sym.empty(2,0);
+        eq(1) = subs(q(1),x,timeLB)+C1 == posLB;
+        eq(2) = subs(q(2),x,timeUB)+C2 == posUB;
+        sol = solve(eq,[C1 C2]);
+        q(1) = q(1)+sol.C1;
+        q(2) = q(2)+sol.C2;
         t = x;
     case 'pause'
         symVar = [];
@@ -139,8 +170,10 @@ end
 %% define breakpoints
 switch sTrajType
     case 'trap'
-        breaks = [timeLB,timeLB+trapRatio*dt,...
-            timeUB-trapRatio*dt,timeUB];
+        breaks = [timeLB,timeLB+trapRatioAcc*dt,...
+            timeUB-trapRatioDec*dt,timeUB];
+    case 'cvel'
+        breaks = [timeLB, timeLB+trapRatioAcc*dt, timeUB];
     case 'spline'
         breaks = linspace(timeLB,timeUB,nPieces+1);
     case 'custom'

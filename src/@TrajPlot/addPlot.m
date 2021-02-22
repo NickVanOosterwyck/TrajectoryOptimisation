@@ -4,7 +4,7 @@ obj.iPlot=obj.iPlot+1;
 % label
 if isempty(varargin)
     switch sol(1).input.sTrajType
-        case {'trap','poly5'}
+        case {'trap','poly5','cvel'}
             label = sol(1).input.sTrajType;
         case {'poly','cheb','chebU'}
             label = strcat(sol(1).input.sTrajType,...
