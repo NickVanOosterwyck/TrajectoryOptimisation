@@ -86,7 +86,7 @@ else
         end
         
     else
-        [a_Tl,S_J]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
+        [a_J,S_J]=polyfit(dataJ(:,1),dataJ(:,2),d_J);
     end
     J=poly2sym(a_J,ph);
     a_J=fliplr(a_J);

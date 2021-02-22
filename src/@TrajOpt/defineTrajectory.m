@@ -92,7 +92,7 @@ switch sTrajType
         symVar = [];
         % create velocity function
         dt = timeUB-timeLB;
-        qd1_max = (posUB-posLB)/((trapRatio*dt)+(dt-2*trapRatio*dt));
+        qd1_max = (posUB-posLB)/(dt-(trapRatio*dt));
         qd1 = sym.empty(3,0);
         qd1(1) = qd1_max/(trapRatio*dt)*(x-timeLB);
         qd1(2) = qd1_max;
