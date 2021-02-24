@@ -29,7 +29,7 @@ inputC.sMechanism = input.sMechanism;
 if ~isfield(input, 'sTrajType')
     error('Field ''sTrajType'' cannot be ommitted from ''input''');
 else
-    validTrajTypes = {'trap','poly5','cvel','pause','poly','cheb','chebU',...
+    validTrajTypes = {'trap','cvel','pause','poly','cheb','chebU',...
         'spline','custom','dis'};
     validatestring(input.sTrajType,validTrajTypes);
 end
@@ -104,23 +104,16 @@ switch inputC.sTrajType
 end
 inputC.speedB = input.speedB;
 
-%% sSolver
+%% isJerk0
 % validate field
-if ~isfield(input, 'sSolver')
-    input.sSolver = [];
+if ~isfield(input,'isJerk0')
+    input.isJerk0 = false;
 else
-    validstrings = {'directCal','interior-point','quasi-newton','ga','intlab'};
-    validatestring(input.sSolver,validstrings);
+    if ~islogical(input.isJerk0)
+        error('Field ''isJerk0'' must be logical.')
+    end
 end
-% extra checks
-switch inputC.sTrajType
-    case {'poly','cheb','chebU','spline'}
-        if isempty(input.sSolver)
-            error(['Field ''sSolver'' cannot be ommitted from ''input'''...
-                'for the selected trajectory type ''%s'''],input.sTrajType);
-        end
-end
-inputC.sSolver = input.sSolver;
+inputC.isJerk0 = input.isJerk0;
 
 %% DOF
 % validate field and assign default value if empty
@@ -132,17 +125,38 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'trap','poly5','cvel','pause','custom'}
+    case {'trap','cvel','pause','custom'}
         if input.DOF ~= 0
             error(['The selected trajectory',...
                 'type does not allow any DOF.'])
         end
-    case {'poly','cheb','chebU','spline'}
-        if input.DOF == 0
-            warning('The selected trajectory has no DOF.')
-        end
+%     case {'poly','cheb','chebU','spline'}
+%         if input.DOF == 0
+%             warning('The selected trajectory has no DOF.')
+%         end
+%     otherwise
 end
 inputC.DOF = input.DOF;
+
+%% sSolver
+% validate field
+if ~isfield(input, 'sSolver')
+    input.sSolver = [];
+else
+    validstrings = {'directCal','interior-point','quasi-newton','ga','intlab'};
+    validatestring(input.sSolver,validstrings);
+end
+% extra checks
+switch inputC.sTrajType
+    case {'poly','cheb','chebU','spline'}
+        if  inputC.DOF ~= 0
+        if isempty(input.sSolver)
+            error(['Field ''sSolver'' cannot be ommitted from ''input'''...
+                'for the selected trajectory type ''%s'''],input.sTrajType);
+        end
+        end
+end
+inputC.sSolver = input.sSolver;
 
 %% isTimeResc
 if ~isfield(input, 'isTimeResc')
@@ -195,7 +209,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','cvel','pause','poly','cheb','chebU','spline','custom'}
+    case {'poly5','poly7','cvel','pause','poly','cheb','chebU','spline','custom'}
         if ~isempty(input.trapRatio)
             error(['The selected trajectory type ''%s'' does not allow a',...
                 'field ''trapRatio.'''],input.sTrajType)
@@ -214,7 +228,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','cvel','pause','trap','poly','cheb','chebU','spline'}
+    case {'poly5','poly7','cvel','pause','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.trajFun)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''trajFun.'''],input.sTrajType)
@@ -233,7 +247,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','cvel','pause','trap','poly','cheb','chebU','spline'}
+    case {'poly5','poly7','cvel','pause','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.trajFunBreaks)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''trajFunBreaks'''],input.sTrajType)
@@ -252,7 +266,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','cvel','pause','trap','poly','cheb','chebU','spline'}
+    case {'poly5','poly7','cvel','pause','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.traj)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''traj.'''],input.sTrajType)
@@ -276,7 +290,7 @@ else
 end
 % extra checks
 switch inputC.sTrajType
-    case {'poly5','cvel','pause','trap','poly','cheb','chebU','spline'}
+    case {'poly5','poly7','cvel','pause','trap','poly','cheb','chebU','spline'}
         if ~isempty(input.time)
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''time.'''],input.sTrajType)
@@ -401,7 +415,7 @@ inputC.isHornerNot = input.isHornerNot;
 
 %% nPieces
 switch inputC.sTrajType
-    case {'poly5','pause','poly','cheb','chebU','dis'}
+    case {'pause','poly','cheb','chebU','dis'}
         inputC.nPieces = 1;
     case {'cvel'}
         inputC.nPieces = 2;

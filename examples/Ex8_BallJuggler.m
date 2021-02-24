@@ -2,16 +2,22 @@
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 
+%% settings
+time = 0.11;
+speed = 1400;
+startangle = 0;
+endangle = 90;
+
 %% cvel
 clear input
 % required
 input.sMechanism = 'BallJuggler';
 input.sTrajType = 'cvel';
 input.timeA = 0;
-input.timeB = 0.14;
-input.posA = 0;
-input.posB = 90/180*pi;
-input.speedB = 1080/180*pi;
+input.timeB = time;
+input.posA = startangle/180*pi;
+input.posB = endangle/180*pi;
+input.speedB = speed/180*pi;
 
 % optional
 input.d_J = 4;
@@ -26,10 +32,10 @@ clear input
 input.sMechanism = 'BallJuggler';
 input.sTrajType = 'poly5';
 input.timeA = 0;
-input.timeB = 0.14;
-input.posA = 0;
-input.posB = 105.5/180*pi;
-input.speedB = 1080/180*pi;
+input.timeB = time;
+input.posA = startangle/180*pi;
+input.posB = endangle/180*pi;
+input.speedB = speed/180*pi;
 
 % optional
 input.d_J = 4;
@@ -40,16 +46,19 @@ input.isPosResc = true;
 poly5 = TrajOpt(input);
 poly5.optimizeTrajectory();
 
+fig = TrajPlot();
+fig.addPlot(poly5);
+
 %% cheb7
 clear input
 % required
 input.sMechanism = 'BallJuggler';
 input.sTrajType = 'cheb';
 input.timeA = 0;
-input.timeB = 0.14;
-input.posA = 0;
-input.posB = 105.5/180*pi;
-input.speedB = 1080/180*pi;
+input.timeB = time;
+input.posA = startangle/180*pi;
+input.posB = endangle/180*pi;
+input.speedB = speed/180*pi;
 input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
@@ -66,33 +75,33 @@ fig = TrajPlot();
 fig.addPlot(cheb7);
 
 %% cheb9
-% clear input
-% % required
-% input.sMechanism = 'BallJuggler';
-% input.sTrajType = 'cheb';
-% input.timeA = 0;
-% input.timeB = 0.14;
-% input.posA = 0;
-% input.posB = 90/180*pi;
-% input.speedB = 1080/180*pi;
-% input.DOF = 4;
-% input.sSolver = 'quasi-newton';
-% 
-% % optional
-% input.d_J = 4;
-% input.d_Tl = 4;
-% input.isTimeResc = true;
-% input.isPosResc = true;
-% 
-% cheb7 = TrajOpt(input);
-% cheb7.optimizeTrajectory();
+clear input
+% required
+input.sMechanism = 'BallJuggler';
+input.sTrajType = 'cheb';
+input.timeA = 0;
+input.timeB = time;
+input.posA = startangle/180*pi;
+input.posB = endangle/180*pi;
+input.speedB = speed/180*pi;
+input.DOF = 4;
+input.sSolver = 'quasi-newton';
+
+% optional
+input.d_J = 4;
+input.d_Tl = 4;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+cheb9 = TrajOpt(input);
+cheb9.optimizeTrajectory();
 
 %% plot solutions
 fig = TrajPlot();
 fig.addPlot(cvel);
-fig.addPlot(poly5);
+% fig.addPlot(poly5);
 fig.addPlot(cheb7);
-%fig.addPlot(cheb9);
+% fig.addPlot(cheb9);
 %fig.addRpmAxis();
 
 %% Convergence analysis
@@ -122,7 +131,7 @@ poly5.defineProperties();
 figure
 subplot(2,1,1)
 hold on
-fplot(poly5.prop.J,[0 1.5708])
+fplot(poly5.prop.J,[0 105.5/180*pi])
 plot(poly5.prop.J_dis(:,1),poly5.prop.J_dis(:,2),'.')
 subplot(2,1,2)
 hold on

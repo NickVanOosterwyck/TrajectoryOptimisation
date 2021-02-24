@@ -26,7 +26,7 @@ cheb7 = TrajOpt(input);
 cheb7.defineFitness();
 
 mpol p6 p7
-fitFun_char = ['fitFun = ' char(cheb7.fit.fitFun)];
+fitFun_char = ['fitFun = ' char(vpa(cheb7.fit.fitFun,16))];
 eval(fitFun_char)
 
 %% gloptipoly3
@@ -37,6 +37,13 @@ loadSedumi;
 
 P = msdp(min(fitFun));
 [status,obj] = msol(P);
+
+%% save and print
+save('fitFun.mat','fitFun')
+
+fileID = fopen('fitFun.txt','w');
+fprintf(fileID,'%s',fitFun_char);
+fclose(fileID);
 
 %%
 % mpol x1 x2

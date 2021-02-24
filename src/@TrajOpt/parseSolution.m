@@ -15,6 +15,7 @@ isPosResc = obj.input.isPosResc;
 q = obj.traj.q;
 qd1 = obj.traj.qd1;
 qd2 = obj.traj.qd2;
+qd3 = obj.traj.qd3;
 time = obj.traj.t;
 breaks = obj.traj.breaks;
 designVar = obj.traj.var.designVar;
@@ -33,6 +34,7 @@ switch sTrajType
         q_C = q;
         qd1_C = qd1;
         qd2_C = qd2;
+        qd3_C = qd3;
         breaks_C = breaks;
         t_C = time;
     otherwise
@@ -56,6 +58,7 @@ switch sTrajType
         
         qd1_C = diff(q_C,t);
         qd2_C = diff(qd1_C,t);
+        qd3_C = diff(qd2_C,t);
         t_C = t;
 end
 
@@ -118,6 +121,7 @@ switch sTrajType
         q_dis = q_C;
         qd1_dis = qd1_C;
         qd2_dis = qd2_C;
+        qd3_dis = qd3_C;
         Tm_dis = Tm_C;
         ts = t_C(2)-t_C(1);
     otherwise
@@ -134,6 +138,7 @@ switch sTrajType
             q_dis(ind:ind+n-1) = double(subs(q_C(i),t,t_temp));
             qd1_dis(ind:ind+n-1) = double(subs(qd1_C(i),t,t_temp));
             qd2_dis(ind:ind+n-1) = double(subs(qd2_C(i),t,t_temp));
+            qd3_dis(ind:ind+n-1) = double(subs(qd3_C(i),t,t_temp));
             Tm_dis(ind:ind+n-1) = double(subs(Tm_C(i),t,t_temp));
             ind=ind+n;
         end
@@ -151,7 +156,7 @@ p_sol = double(p_sol);
 
 % coefficients of standard polynomial
 switch sTrajType
-    case {'poly5','poly','cheb','chebU'}
+    case {'poly','cheb','chebU'}
         p_pol=fliplr(double(coeffs(q_C(i),'All')));
     case 'spline'
         p_pol=zeros(nPieces,4);
@@ -166,6 +171,7 @@ end
 res.q = q_C;
 res.qd1 = qd1_C;
 res.qd2 = qd2_C;
+res.qd3 = qd3_C;
 res.t = t_C;
 res.breaks = breaks_C;
 res.Tm = Tm_C;
@@ -179,6 +185,7 @@ res.DIS.t = t_dis;
 res.DIS.q = q_dis;
 res.DIS.qd1 = qd1_dis;
 res.DIS.qd2 = qd2_dis;
+res.DIS.qd3 = qd3_dis;
 res.DIS.Tm = Tm_dis;
 res.DIS.ts = ts;
 res.TE.Tload = Tload_C;
