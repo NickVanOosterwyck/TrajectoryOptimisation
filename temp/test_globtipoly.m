@@ -2,7 +2,7 @@
 %% init
 clear; clc; close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
-%loadGloptipoly3;
+loadGloptipoly3;
 
 %% create fitFun
 clear input
@@ -21,6 +21,7 @@ input.d_J = 4;
 input.d_Tl = 5;
 input.isTimeResc = true;
 input.isPosResc = true;
+%input.isHornerNot = true;
 
 cheb7 = TrajOpt(input);
 cheb7.defineFitness();
@@ -35,7 +36,11 @@ loadSedumi;
 % mpol x1 x2
 % fitFun = 4*x1^2+x1*x2-4*x2^2-2.1*x1^4+4*x2^4+x1^6/3;
 
-P = msdp(min(fitFun));
+lb = -8;
+ub = 8;
+
+K = [p6>=lb, p6<=ub, p7>=lb, p7<=ub];
+P = msdp(min(fitFun),K);
 [status,obj] = msol(P);
 
 %% save and print

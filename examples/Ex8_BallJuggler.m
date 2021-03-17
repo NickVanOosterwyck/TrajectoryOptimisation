@@ -6,7 +6,8 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 time = 0.11;
 speed = 1400;
 startangle = 0;
-endangle = 90;
+throwangle = 90;
+catchangle = 100;
 
 %% cvel
 clear input
@@ -16,7 +17,7 @@ input.sTrajType = 'cvel';
 input.timeA = 0;
 input.timeB = time;
 input.posA = startangle/180*pi;
-input.posB = endangle/180*pi;
+input.posB = throwangle/180*pi;
 input.speedB = speed/180*pi;
 
 % optional
@@ -30,12 +31,31 @@ cvel.optimizeTrajectory();
 clear input
 % required
 input.sMechanism = 'BallJuggler';
-input.sTrajType = 'poly5';
+input.sTrajType = 'poly';
 input.timeA = 0;
-input.timeB = time;
+input.timeB = 2*throwangle/speed;
 input.posA = startangle/180*pi;
-input.posB = endangle/180*pi;
+input.posB = throwangle/180*pi;
 input.speedB = speed/180*pi;
+
+% optional
+input.d_J = 4;
+input.d_Tl = 4;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+poly5 = TrajOpt(input);
+poly5.optimizeTrajectory();
+
+%% backward
+clear input
+% required
+input.sMechanism = 'BallJuggler';
+input.sTrajType = 'poly';
+input.timeA = 2*throwangle/speed;
+input.timeB = 2*throwangle/speed+0.01;
+input.posA = throwangle/180*pi;
+input.posB = catchangle/180*pi;
 
 % optional
 input.d_J = 4;
@@ -57,7 +77,7 @@ input.sTrajType = 'cheb';
 input.timeA = 0;
 input.timeB = time;
 input.posA = startangle/180*pi;
-input.posB = endangle/180*pi;
+input.posB = throwangle/180*pi;
 input.speedB = speed/180*pi;
 input.DOF = 2;
 input.sSolver = 'quasi-newton';
@@ -82,7 +102,7 @@ input.sTrajType = 'cheb';
 input.timeA = 0;
 input.timeB = time;
 input.posA = startangle/180*pi;
-input.posB = endangle/180*pi;
+input.posB = throwangle/180*pi;
 input.speedB = speed/180*pi;
 input.DOF = 4;
 input.sSolver = 'quasi-newton';

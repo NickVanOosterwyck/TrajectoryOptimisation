@@ -38,6 +38,7 @@ input.d_Tl = 5;
 
 poly5 = TrajOpt(input);
 poly5.optimizeTrajectory();
+
 %% poly7J0
 clear input
 % required

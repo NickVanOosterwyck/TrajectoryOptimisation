@@ -233,6 +233,7 @@ switch inputC.sTrajType
         error(['The selected trajectory type ''%s'' does not allow a',...
             'field ''trajFun.'''],input.sTrajType)
         end
+        
 end
 inputC.trajFun = input.trajFun;
 
