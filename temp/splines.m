@@ -1,15 +1,9 @@
 %% init
 clear; clc; %close all;
 addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
-% latex
-set(0,'DefaultTextInterpreter','latex');
-set(0,'DefaultLegendInterpreter','latex');
-set(0,'DefaultAxesTickLabelInterpreter','latex');
-% intlab
-cwd=cd(['C:\Program Files\MATLAB\R' ...
-    version('-release') '\toolbox\INTLAB\Intlab_V11']);
-startintlab;
-cd(cwd);
+
+%loadIntlab;
+setDefaultInterpreter('latex')
 format infsup %long e % change display of intervals
 
 %% input

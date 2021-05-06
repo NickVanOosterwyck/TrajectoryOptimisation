@@ -19,7 +19,7 @@ trapRatio = obj.input.trapRatio; % ratio t_acc/t_tot (trap)
 trajFun = obj.input.trajFun; % custom symbolic trajectory function
 trajFunBreaks = obj.input.trajFunBreaks;
 time = obj.input.time; % time variable or time data (discrete)
-q_dis = obj.input.traj; % trajectory data (discret)
+q_dis = obj.input.traj; % trajectory data (discrete)
 
 %% define bounds
 % check for resaling and define bounds

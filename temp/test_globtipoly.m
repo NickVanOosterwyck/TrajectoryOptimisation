@@ -44,8 +44,6 @@ P = msdp(min(fitFun),K);
 [status,obj] = msol(P);
 
 %% save and print
-save('fitFun.mat','fitFun')
-
 fileID = fopen('fitFun.txt','w');
 fprintf(fileID,'%s',fitFun_char);
 fclose(fileID);

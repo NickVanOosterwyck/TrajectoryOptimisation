@@ -30,7 +30,7 @@ input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 input.isTimeResc = true;
-input.isPosResc = true;
+input.isPosResc = false;
 
 % optional
 input.d_J = 4;
@@ -123,6 +123,49 @@ input.isPosResc = true;
 cheb9 = TrajOpt(input);
 cheb9.optimizeTrajectory();
 
+%% cheb11J0
+clear input
+% required
+input.sMechanism = 'Nedschroef';
+input.sTrajType = 'cheb';
+input.timeA = 0;
+input.timeB = 0.07375;
+input.posA = 0;
+input.posB = 3.0299;
+input.isJerk0 = true;
+input.DOF = 4;
+input.sSolver = 'quasi-newton';
+
+% optional
+input.d_J = 4;
+input.d_Tl = 5;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+cheb11J0 = TrajOpt(input);
+cheb11J0.optimizeTrajectory();
+
+%% cheb13
+clear input
+% required
+input.sMechanism = 'Nedschroef';
+input.sTrajType = 'cheb';
+input.timeA = 0;
+input.timeB = 0.07375;
+input.posA = 0;
+input.posB = 3.0299;
+input.DOF = 8;
+input.sSolver = 'quasi-newton';
+
+% optional
+input.d_J = 4;
+input.d_Tl = 5;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+cheb13 = TrajOpt(input);
+cheb13.optimizeTrajectory();
+
 %% poly17GA
 load('poly17GA.mat');
 clear input
@@ -170,6 +213,8 @@ fig.addPlot(poly7J0);
 fig.addPlot(cheb7);
 fig.addPlot(cheb9J0);
 fig.addPlot(cheb9);
+fig.addPlot(cheb11J0,'cheb11J0');
+fig.addPlot(cheb13);
 fig.addPlot(poly17GA,'poly17GA');
 %fig.addPlot(spline5);
 fig.addRpmAxis();

@@ -14,7 +14,7 @@ lb=p.Results.Bounds(1);
 ub=p.Results.Bounds(2);
 
 % read objective
-objFun = obj.fit.fitFun;
+objFun =obj.fit.fitFun;
 DOF = obj.input.DOF;
 
 % read settings
