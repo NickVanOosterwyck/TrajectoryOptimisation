@@ -4,7 +4,7 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..']))
 
 %loadIntlab;
 setDefaultInterpreter('latex')
-format infsup %long e % change display of intervals
+%format infsup %long e % change display of intervals
 
 %% input
 % breakpoints

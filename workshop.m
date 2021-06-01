@@ -1,84 +1,84 @@
-%%
-clear input
-% required
-input.sMechanism = 'Nedschroef';
-input.sTrajType = 'poly';
-input.timeA = 0;
-input.timeB = 0.07375;
-input.posA = 0;
-input.posB = 3.0299;
-input.DOF = 2;
-input.sSolver = 'quasi-newton';
-
-% optional
-input.d_J = 4;
-input.d_Tl = 5;
-input.isTimeResc = true;
-input.isPosResc = false;
-
-mop = TrajOpt(input);
-mop.defineTrajectory();
-mop.optimizeTrajectory();
-q = mop.traj.q
+%% input
+syms pA pB
+posLB = pA;
+posUB = pB;
+timeLB = -1;
+timeUB = 1;
+speedLB = 0;
+speedUB = 0;
 
 %%
-syms p0
-symVar=sym('p', [1 9]);
-symVar=[p0 symVar];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 1. polynomial motion profile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+DOF = 4; % degree
+isJerk0 = 0; % jerk constraint
+
+%% 1.a create equations for position, speed, acceleration and jerk
+syms p_0
+if isJerk0
+    symVar=sym('p_', [1 7+DOF]);
+else
+    symVar=sym('p_', [1 5+DOF]);
+end
+symVar=[p_0 symVar];
 syms x
 pol=x.^(0:9).';
 q=symVar*pol;
 qd1 = diff(q,x);
 qd2 = diff(qd1,x);
+qd3 = diff(qd2,x);
 
-syms pA pB
-timeLB = -1;
-timeUB = 1;
+% horner notation to increase numeric stability
+q=horner(q);
+qd1=horner(qd1);
+qd2=horner(qd2);
+qd3=horner(qd3);
+
+%% 1.b create equations for lower degree coefficients
+if isJerk0
+    constrVar = symVar(1:8).';
+    designVar = symVar(9:end).'; % higher degree coeff.
+else
+    constrVar = symVar(1:6).';
+    designVar = symVar(7:end).'; % higher degree coeff.
+end
+
 constrEq_bnd = sym.empty(6,0);
-constrEq_bnd(1,1) = subs(q(1),x,timeLB)==pA;
-constrEq_bnd(2,1) = subs(qd1(1),x,timeLB)==0;
+constrEq_bnd(1,1) = subs(q(1),x,timeLB)==posLB;
+constrEq_bnd(2,1) = subs(qd1(1),x,timeLB)==speedLB;
 constrEq_bnd(3,1) = subs(qd2(1),x,timeLB)==0;
-constrEq_bnd(4,1) = subs(q(end),x,timeUB)==pB;
-constrEq_bnd(5,1) = subs(qd1(end),x,timeUB)==0;
+constrEq_bnd(4,1) = subs(q(end),x,timeUB)==posUB;
+constrEq_bnd(5,1) = subs(qd1(end),x,timeUB)==speedUB;
 constrEq_bnd(6,1) = subs(qd2(end),x,timeUB)==0;
-sol = solve(constrEq_bnd,symVar(1:6));
-constrVar_sol=struct2array(sol);
-q = subs(q,symVar,constrVar_sol);
-qd1 = subs(q,symVar,constrVar_sol);
-qd2 = subs(q,symVar,constrVar_sol);
+if isJerk0
+    constrEq_bnd(7,1) = subs(qd3(1),x,timeLB)==0;
+    constrEq_bnd(8,1) = subs(qd3(end),x,timeUB)==0;
+end
+
+sol = solve(constrEq_bnd,constrVar);
+constrVar_sol=struct2array(sol).';
+
+% q = subs(q,constrVar,constrVar_sol);
+% qd1 = subs(qd1,constrVar,constrVar_sol);
+% qd2 = subs(qd2,constrVar,constrVar_sol);
+% qd3 = subs(qd3,constrVar,constrVar_sol);
+
+%% 1.c print
+% change to variable names in excel
+syms time_x
+disp(subs(q,x,time_x))
+disp(subs(qd1,x,time_x))
+disp(subs(qd2,x,time_x))
+disp(subs(qd3,x,time_x))
 
 %%
-clear input
-input.sTrajType = 'trap';
-input.timeA = 0;
-% input.timeB = 1;
-% input.posA = 2;
-% input.posB = 1;
-trap = CADTraj(input);
-obj = trap;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2. trapezoidal motion profile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+trapRatio = 1/3;
 
-% read obj.input
-timeA = obj.input.timeA; % start time
-timeB = obj.input.timeB; % end time
-posA = obj.input.posA; % start position
-posB = obj.input.posB; % end position
-speedA = obj.input.speedA; % start speed
-speedB = obj.input.speedB; % end speed
-isJerk0 = obj.input.isJerk0; % is jerk 0 in start and endpoint
-sTrajType = obj.input.sTrajType; % trajectory type
-DOF = obj.input.DOF; % degree of freedom
-nPieces = obj.input.nPieces; % #intervals
-trapRatio = obj.input.trapRatio; % ratio t_acc/t_tot (trap)
-trajFun = obj.input.trajFun; % custom symbolic trajectory function
-trajFunBreaks = obj.input.trajFunBreaks;
-
-timeLB=timeA;
-timeUB=timeB;
-posLB=posA;
-posUB=posB;
-speedLB = speedA;
-speedUB = speedB;
-
+%% 2.a create equations for position, speed, acceleration and jerk
 symVar = [];
 % set ratios and max speed
 dt = timeUB-timeLB;
@@ -113,3 +113,15 @@ q(1) = q(1)+sol.C1;
 q(2) = q(2)+sol.C2;
 q(3) = q(3)+sol.C3;
 t = x;
+
+%% 2.b print
+% change to variable names in excel
+syms time_x
+disp(subs(q.',x,time_x))
+disp(subs(qd1.',x,time_x))
+disp(subs(qd2.',x,time_x))
+disp(subs(qd3.',x,time_x))
+
+% use following format to add multiple functions
+% IF(time_x<-1+(2*1/3),FUN1,IF(time_x<-1+(2*2/3),FUN2,FUN3))
+

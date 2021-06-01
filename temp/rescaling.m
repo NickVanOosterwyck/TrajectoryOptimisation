@@ -125,8 +125,8 @@ DOF = mop.input.DOF;
 designVar = mop.traj.var.designVar;
 
 fitFun_vec = char(fitFun);
-%old = arrayfun(@char, [p6t;p7t], 'uniform', false); %sym2cell
-old = arrayfun(@char, [p6t;p7t;p8t;p9t], 'uniform', false); %sym2cell
+old = arrayfun(@char, [p6t;p7t], 'uniform', false); %sym2cell
+%old = arrayfun(@char, [p6t;p7t;p8t;p9t], 'uniform', false); %sym2cell
 new=cell(DOF,1);
 for i=1:DOF
     new(i,1) = cellstr(['x(' num2str(i) ',:)']);

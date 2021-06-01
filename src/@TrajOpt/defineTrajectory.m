@@ -306,6 +306,7 @@ end
 %     q=horner(q);
 %     qd1=horner(qd1);
 %     qd2=horner(qd2);
+%     qd3=horner(qd3);
 % end
 
 %% write output

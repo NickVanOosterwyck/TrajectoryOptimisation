@@ -30,7 +30,7 @@ input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 input.isTimeResc = true;
-input.isPosResc = false;
+input.isPosResc = true;
 
 % optional
 input.d_J = 4;
@@ -128,10 +128,10 @@ clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'cheb';
-input.timeA = 0;
-input.timeB = 0.07375;
-input.posA = 0;
-input.posB = 3.0299;
+input.timeA = 0.1675;
+input.timeB = 0.2250;
+input.posA = 3.0299;
+input.posB = 0;
 input.isJerk0 = true;
 input.DOF = 4;
 input.sSolver = 'quasi-newton';
@@ -150,10 +150,10 @@ clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'cheb';
-input.timeA = 0;
-input.timeB = 0.07375;
-input.posA = 0;
-input.posB = 3.0299;
+input.timeA = 0.1675;
+input.timeB = 0.2250;
+input.posA = 3.0299;
+input.posB = 0;
 input.DOF = 8;
 input.sSolver = 'quasi-newton';
 

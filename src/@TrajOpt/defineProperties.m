@@ -27,7 +27,7 @@ if isempty(dataJ) && ~isJSym
 end
 fprintf('Property data is imported. \n\n');
 
-% select 'useful' part of property data
+% select 'usefull' part of property data
 [~,iTl_1] = min(abs(dataTl(:,1)-posA)); % get closest value
 [~,iTl_2] = min(abs(dataTl(:,1)-posB));
 dataTl=dataTl(min(iTl_1,iTl_2):max(iTl_1,iTl_2),:);
