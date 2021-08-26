@@ -128,10 +128,10 @@ clear input
 % required
 input.sMechanism = 'Nedschroef';
 input.sTrajType = 'cheb';
-input.timeA = 0.1675;
-input.timeB = 0.2250;
-input.posA = 3.0299;
-input.posB = 0;
+input.timeA = 0;
+input.timeB = 0.07375;
+input.posA = 0;
+input.posB = 3.0299;
 input.isJerk0 = true;
 input.DOF = 4;
 input.sSolver = 'quasi-newton';
@@ -144,6 +144,49 @@ input.isPosResc = true;
 
 cheb11J0 = TrajOpt(input);
 cheb11J0.optimizeTrajectory();
+
+%% cheb11
+clear input
+% required
+input.sMechanism = 'Nedschroef';
+input.sTrajType = 'cheb';
+input.timeA = 0;
+input.timeB = 0.07375;
+input.posA = 0;
+input.posB = 3.0299;
+input.DOF = 6;
+input.sSolver = 'quasi-newton';
+
+% optional
+input.d_J = 4;
+input.d_Tl = 5;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+cheb11 = TrajOpt(input);
+cheb11.optimizeTrajectory();
+
+%% cheb13J0
+clear input
+% required
+input.sMechanism = 'Nedschroef';
+input.sTrajType = 'cheb';
+input.timeA = 0.1675;
+input.timeB = 0.2250;
+input.posA = 3.0299;
+input.posB = 0;
+input.isJerk0 = true;
+input.DOF = 6;
+input.sSolver = 'quasi-newton';
+
+% optional
+input.d_J = 4;
+input.d_Tl = 5;
+input.isTimeResc = true;
+input.isPosResc = true;
+
+cheb13J0 = TrajOpt(input);
+cheb13J0.optimizeTrajectory();
 
 %% cheb13
 clear input

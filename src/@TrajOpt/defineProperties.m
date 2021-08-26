@@ -72,6 +72,7 @@ if isJSym
     pol=ph.^(0:d_J).';
     J=a_J*pol;
     J_dis = [];
+    S_J.normr = [];
 else
     if isempty(d_J)
         d_J=0;

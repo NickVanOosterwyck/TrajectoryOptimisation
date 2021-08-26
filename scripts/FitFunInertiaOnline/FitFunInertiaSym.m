@@ -5,17 +5,17 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..\..']))
 %%
 clear input
 % required
-input.sMechanism = 'Nedschroef';
+input.sMechanism = 'NedschroefInertiaSym';
 input.sTrajType = 'cheb';
 input.timeA = 0;
-input.timeB = 0.0738;
+input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
 input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
 % optional
-input.d_J = 4;
+input.d_J = 5;
 input.d_Tl = 5;
 input.isTimeResc = true;
 input.isPosResc = true;
@@ -70,8 +70,8 @@ save([fileparts(matlab.desktop.editor.getActiveFilename) ...
 
 %% check & plot
 % check
-a_J_sol = [0.012438014347721;6.097620376184698e-05;-0.017573048370808;6.302708402890077e-05;0.008885823771286];
-%a_J_sol = [0.012438014347721;-3.915888336773353e-05;-0.017573048370808;5.297875506136531e-04;0.008885823771286;-4.196018430545512e-04];
+%a_J_sol = [0.012438014347721;6.097620376184698e-05;-0.017573048370808;6.302708402890077e-05;0.008885823771286];
+a_J_sol = [0.012438014347721;-3.915888336773353e-05;-0.017573048370808;5.297875506136531e-04;0.008885823771286;-4.196018430545512e-04];
 %a_J_sol = [0.012445244055890;-3.915888336772541e-05;-0.017724698134493;5.297875506136194e-04;0.009340251136910;-4.196018430545183e-04;-3.328642814668063e-04];
 sqrt(fitFun_vec([0;0],a_J_sol)) % must be 22.4736
 
@@ -85,7 +85,7 @@ fitFun = subs(fitFun,a1,(a_J_sol(2)));
 fitFun = subs(fitFun,a2,(a_J_sol(3)));
 fitFun = subs(fitFun,a3,(a_J_sol(4)));
 fitFun = subs(fitFun,a4,(a_J_sol(5)));
-%fitFun = subs(fitFun,a5,(a_J_sol(6)));
+fitFun = subs(fitFun,a5,(a_J_sol(6)));
 %fitFun = subs(fitFun,a6,(a_J_sol(7)));
 
 figure

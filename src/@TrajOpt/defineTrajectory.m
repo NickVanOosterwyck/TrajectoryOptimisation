@@ -22,13 +22,13 @@ time = obj.input.time; % time variable or time data (discrete)
 q_dis = obj.input.traj; % trajectory data (discrete)
 
 %% define bounds
-% check for resaling and define bounds
+% check for rescaling and define bounds
 if isTimeResc
     timeLB=-1;
     timeUB=1;
-    a=0.5*(timeB-timeA);
+    a=0.5*(timeB-timeA); % correction factor = C4
 else
-    timeLB=timeA; % correction factor = C4
+    timeLB=timeA;
     timeUB=timeB;
     a=1;
 end
