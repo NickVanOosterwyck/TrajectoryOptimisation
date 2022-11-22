@@ -4,13 +4,23 @@ addpath(genpath([fileparts(matlab.desktop.editor.getActiveFilename),'\..\..']))
 
 %%
 clear input
-% required
+% forward
+% input.sMechanism = 'NedschroefInertiaSym';
+% input.sTrajType = 'cheb';
+% input.timeA = 0;
+% input.timeB = 0.07375;
+% input.posA = 0;
+% input.posB = 3.0299;
+% input.DOF = 2;
+% input.sSolver = 'quasi-newton';
+
+% backward
 input.sMechanism = 'NedschroefInertiaSym';
 input.sTrajType = 'cheb';
 input.timeA = 0;
-input.timeB = 0.07375;
-input.posA = 0;
-input.posB = 3.0299;
+input.timeB = 0.0575;
+input.posA = 3.0299;
+input.posB = 0;
 input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
@@ -100,4 +110,26 @@ X0=zeros(2,1);
 
 p6 = p(1)
 p7 = p(2)
+
+q = subs(cheb2.traj.q,designVar,p);
+fplot(q,[-1,1])
+
+%% optimise with online data
+a = readmatrix("PolyCoeffs_AB_BA.xlsx",'Range','C2:G7');
+p = zeros(2,size(a,2));
+options = optimoptions(@fmincon,'Algorithm','sqp');
+X0=zeros(2,1);
+for i = 1:size(a,2)
+    p(:,i) = fmincon(@(x) fitFun_vec(x,a(:,i)),X0,[],[],[],[],[],[],[],options);
+end
+
+figure
+hold on
+for i = 1:size(a,2)
+    q = subs(cheb2.traj.q,designVar,p(:,i));
+    fplot(q,[-1,1])
+end
+
+
+
 

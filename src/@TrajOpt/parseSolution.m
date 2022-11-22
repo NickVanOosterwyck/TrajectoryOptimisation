@@ -111,7 +111,7 @@ switch sTrajType
         syms t
         %Trms_C=double(sqrt(1/2*subs(objFun,p_sym(7:n+1),p(7:n+1))));
         Trms_C=double(sqrt(subs(fitFun,designVar.',designVar_sol)));
-        %Trms_C=double(sqrt(1/2*int(Tm_C^2,t,t_A,t_B))); % alternative
+        %Trms_C=double(sqrt(1/(timeB-timeA)*int(Tm_C^2,t,timeA,timeB))); % alternative
 end
 
 % evaluate discrete
