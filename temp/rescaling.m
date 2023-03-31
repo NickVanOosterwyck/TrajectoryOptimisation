@@ -11,7 +11,7 @@ input.timeA = 0;
 input.timeB = 0.07375;
 input.posA = 0;
 input.posB = 3.0299;
-input.DOF = 4;
+input.DOF = 2;
 input.sSolver = 'quasi-newton';
 
 % optional
@@ -137,6 +137,10 @@ fitFun_vec = str2func(['@(x)' fitFun_vec]);
 
 X0 = infsup(0.01*-2^5,0.01*2^5)*ones(DOF,1); % adapt
 opt = verifyoptimset('NIT',1,'TolFun',0.001);
+
+% ppt 06/05/21
+fitFun_vec(infsup(-0.1,0.1)*ones(DOF,1))
+fitFun_vec(infsup(-16,-15.8)*ones(DOF,1))
 
 % solve
 it=1;
